@@ -1,8 +1,9 @@
 import { URL_CONST } from "../utils/urlConst";
 
 async function testcall() {
+  const url = URL_CONST + "";
   try {
-    const response = await fetch(URL_CONST, { method: "GET" });
+    const response = await fetch(url, { method: "GET" });
 
     console.log(response);
 
@@ -13,4 +14,5 @@ async function testcall() {
     throw new Error(error);
   }
 }
+
 export { testcall };
