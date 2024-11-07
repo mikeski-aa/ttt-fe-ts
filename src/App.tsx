@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./App.css";
 import { testcall } from "./services/testCalls";
 import { io, Socket } from "socket.io-client";
@@ -6,7 +6,27 @@ import { io, Socket } from "socket.io-client";
 function App() {
   const [connectState, setConnectState] = useState<boolean>();
   const [socket, setSocket] = useState<Socket | null>();
+  const [connectedUsers, setConnectedUsers] = useState<string[]>([]);
   const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    if (socket) {
+      console.log("hello?");
+      socket.on("connect", () => {
+        socket.on("users", (users) => {
+          console.log(users);
+          setConnectedUsers(users);
+        });
+      });
+
+      // socket.on("disconnect", () => {
+      //   socket.on("users", (users) => {
+      //     console.log(users);
+      //     setConnectedUsers(users);
+      //   });
+      // });
+    }
+  }, [socket]);
 
   const handleClick = async () => {
     if (!connectState) {
@@ -32,6 +52,11 @@ function App() {
   return (
     <>
       <h1>Tic Tac Toe</h1>
+      <ul>
+        {connectedUsers.map((user, index) => (
+          <li key={index}>{user}</li>
+        ))}
+      </ul>
       <button onClick={() => handleClick()}>Call backend</button>
     </>
   );
