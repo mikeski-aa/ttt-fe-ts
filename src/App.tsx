@@ -7,6 +7,7 @@ function App() {
   const [connectState, setConnectState] = useState<boolean>();
   const [socket, setSocket] = useState<Socket | null>();
   const [connectedUsers, setConnectedUsers] = useState<string[]>([]);
+  const [roomState, setRoomState] = useState<boolean>(false);
   const [count, setCount] = useState(0);
 
   useEffect(() => {
@@ -47,6 +48,8 @@ function App() {
     }
   };
 
+  const handleRoomJoin = () => {};
+
   return (
     <div className="mainHolder">
       <h1>Tic Tac Toe</h1>
@@ -54,8 +57,16 @@ function App() {
         {connectState ? (
           <>
             <div>Connected</div>
+
             {connectedUsers.map((user, index) => (
-              <li key={index}>{user}</li>
+              <li
+                key={index}
+                className={
+                  socket ? (socket.id == user ? "me" : undefined) : undefined
+                }
+              >
+                {user}
+              </li>
             ))}
           </>
         ) : (
@@ -65,6 +76,10 @@ function App() {
       <button onClick={() => handleClick()}>
         {connectState ? "Disconnect" : "Connect"}
       </button>
+
+      {/* <button onClick={() => handleRoomJoin()}>
+        {roomState ? "Leave Room" : "Join Room"}
+      </button> */}
     </div>
   );
 }
