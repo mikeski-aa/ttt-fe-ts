@@ -11,10 +11,8 @@ function App() {
 
   useEffect(() => {
     if (socket) {
-      console.log("hello?");
       socket.on("connect", () => {
         socket.on("users", (users) => {
-          console.log(users);
           setConnectedUsers(users);
         });
       });
@@ -50,15 +48,24 @@ function App() {
   };
 
   return (
-    <>
+    <div className="mainHolder">
       <h1>Tic Tac Toe</h1>
       <ul>
-        {connectedUsers.map((user, index) => (
-          <li key={index}>{user}</li>
-        ))}
+        {connectState ? (
+          <>
+            <div>Connected</div>
+            {connectedUsers.map((user, index) => (
+              <li key={index}>{user}</li>
+            ))}
+          </>
+        ) : (
+          <div>Disconnected</div>
+        )}
       </ul>
-      <button onClick={() => handleClick()}>Call backend</button>
-    </>
+      <button onClick={() => handleClick()}>
+        {connectState ? "Disconnect" : "Connect"}
+      </button>
+    </div>
   );
 }
 
