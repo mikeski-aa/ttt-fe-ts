@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import "./App.css";
 import { testcall } from "./services/testCalls";
 import { io, Socket } from "socket.io-client";
+import GameBoard from "./components/GameBoard";
 
 interface IRoom {
   roomId: string;
@@ -83,7 +84,7 @@ function App() {
   return (
     <div className="mainHolder">
       <h1>Tic Tac Toe</h1>
-      {roomFull ? <div className="board">XAXA</div> : null}
+      {roomFull ? <GameBoard /> : null}
       <ul>
         {connectState ? (
           <>
