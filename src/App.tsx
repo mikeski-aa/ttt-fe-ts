@@ -15,43 +15,47 @@ function App() {
   const [roomState, setRoomState] = useState<boolean>(false);
   const [roomInfo, setRoomInfo] = useState<IRoom[]>([]);
   const [room, setRoom] = useState<string>("");
-  const [count, setCount] = useState(0);
+  const [roomFull, setRoomFull] = useState<boolean>(false);
 
   useEffect(() => {
     if (socket) {
-      socket.on("connect", () => {
-        socket.on("users", (users) => {
-          setConnectedUsers(users);
-        });
+      // states can be set directly by passing state setter
+      socket.on("users", setConnectedUsers);
 
-        socket.on("rooms", (roomObject) => {
-          setRoomInfo(roomObject);
-        });
+      socket.on("rooms", setRoomInfo);
 
-        socket.on("disconnect", () => {
-          socket.on("rooms", (roomObject) => {
-            setRoomInfo(roomObject);
-          });
-        });
-
-        socket.on("warning", (arg) => {
-          alert(arg);
-          setRoom("");
-        });
-
-        socket.on("roomId", (roomId) => {
-          setRoom(roomId);
-        });
+      socket.on("warning", (arg) => {
+        alert(arg);
+        setRoom("");
+        setRoomFull(false);
       });
 
-      // socket.on("disconnect", () => {
-      //   socket.on("users", (users) => {
-      //     console.log(users);
-      //     setConnectedUsers(users);
-      //   });
-      // });
+      socket.on("roomId", setRoom);
+
+      socket.on("user join", (message) => {
+        alert(message);
+        setRoomFull(true);
+      });
+
+      socket.on("disconnect", () => {
+        setRoom("");
+        setRoomFull(false);
+      });
     }
+
+    // added cleanup
+
+    return () => {
+      socket?.off("users", setConnectedUsers);
+      socket?.off("rooms", setRoomInfo);
+      socket?.off("warning");
+      socket?.off("roomId", setRoom);
+      socket?.off("user join");
+      socket?.off("disconnect");
+    };
   }, [socket]);
+
+  useEffect(() => {});
 
   const handleClick = async () => {
     if (!connectState) {
@@ -79,6 +83,7 @@ function App() {
   return (
     <div className="mainHolder">
       <h1>Tic Tac Toe</h1>
+      {roomFull ? <div className="board">XAXA</div> : null}
       <ul>
         {connectState ? (
           <>
