@@ -14,6 +14,7 @@ function App() {
   const [connectedUsers, setConnectedUsers] = useState<string[]>([]);
   const [roomState, setRoomState] = useState<boolean>(false);
   const [roomInfo, setRoomInfo] = useState<IRoom[]>([]);
+  const [room, setRoom] = useState<string>("");
   const [count, setCount] = useState(0);
 
   useEffect(() => {
@@ -35,6 +36,11 @@ function App() {
 
         socket.on("warning", (arg) => {
           alert(arg);
+          setRoom("");
+        });
+
+        socket.on("roomId", (roomId) => {
+          setRoom(roomId);
         });
       });
 
@@ -93,19 +99,15 @@ function App() {
           <div>Disconnected</div>
         )}
       </ul>
-      <div className="rooms">
-        Rooms
-        {roomInfo.map((room, index) => (
-          <div key={index}>{room.roomId}</div>
-        ))}
+
+      <div className="yourRoom">
+        {room === ""
+          ? "Not conntected to a room"
+          : `Connected to room: ${room}`}
       </div>
       <button onClick={() => handleClick()}>
         {connectState ? "Disconnect" : "Connect"}
       </button>
-
-      {/* <button onClick={() => handleRoomJoin()}>
-        {roomState ? "Leave Room" : "Join Room"}
-      </button> */}
     </div>
   );
 }
