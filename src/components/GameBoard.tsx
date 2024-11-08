@@ -20,11 +20,38 @@ function GameBoard() {
             xcoord={item.x}
             ycoord={item.y}
             marker={item.marker}
+            pmarker="X"
           />
         ))}
       </div>
-      <div className="row1"></div>
-      <div className="row2"></div>
+      <div className="row1">
+        {board.map((item, index) => (
+          <BoardButton
+            key={index}
+            setBoard={setBoard}
+            board={board}
+            row={1}
+            xcoord={item.x}
+            ycoord={item.y}
+            marker={item.marker}
+            pmarker="X"
+          />
+        ))}
+      </div>
+      <div className="row2">
+        {board.map((item, index) => (
+          <BoardButton
+            key={index}
+            setBoard={setBoard}
+            board={board}
+            row={2}
+            xcoord={item.x}
+            ycoord={item.y}
+            marker={item.marker}
+            pmarker="X"
+          />
+        ))}
+      </div>
     </div>
   );
 }

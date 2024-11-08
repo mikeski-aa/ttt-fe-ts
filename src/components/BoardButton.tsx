@@ -8,6 +8,7 @@ function BoardButton({
   ycoord,
   marker,
   row,
+  pmarker,
 }: {
   setBoard: Dispatch<SetStateAction<IBoardItem[]>>;
   board: IBoardItem[];
@@ -15,6 +16,7 @@ function BoardButton({
   ycoord: number;
   row: number;
   marker: string;
+  pmarker: string;
 }) {
   const handleBtnClick = (xcoord, ycoord, marker) => {};
 
@@ -24,7 +26,12 @@ function BoardButton({
   }
 
   return (
-    <button onClick={() => handleBtnClick(xcoord, ycoord, marker)}></button>
+    <button
+      onClick={() => handleBtnClick(xcoord, ycoord, marker)}
+      className="boardItem"
+    >
+      {marker}
+    </button>
   );
 }
 
