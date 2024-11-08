@@ -11,7 +11,7 @@ interface IRoom {
 
 function App() {
   const [connectState, setConnectState] = useState<boolean>();
-  const [socket, setSocket] = useState<Socket | null>();
+  const [socket, setSocket] = useState<Socket>();
   const [connectedUsers, setConnectedUsers] = useState<string[]>([]);
   const [roomState, setRoomState] = useState<boolean>(false);
   const [roomInfo, setRoomInfo] = useState<IRoom[]>([]);
@@ -34,7 +34,7 @@ function App() {
       socket.on("roomId", setRoom);
 
       socket.on("user join", (message) => {
-        alert(message);
+        // alert(message);
         setRoomFull(true);
       });
 
