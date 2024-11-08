@@ -3,11 +3,17 @@ import "./App.css";
 import { testcall } from "./services/testCalls";
 import { io, Socket } from "socket.io-client";
 
+interface IRoom {
+  roomId: string;
+  users: string[];
+}
+
 function App() {
   const [connectState, setConnectState] = useState<boolean>();
   const [socket, setSocket] = useState<Socket | null>();
   const [connectedUsers, setConnectedUsers] = useState<string[]>([]);
   const [roomState, setRoomState] = useState<boolean>(false);
+  const [roomInfo, setRoomInfo] = useState<IRoom[]>([]);
   const [count, setCount] = useState(0);
 
   useEffect(() => {
@@ -15,6 +21,20 @@ function App() {
       socket.on("connect", () => {
         socket.on("users", (users) => {
           setConnectedUsers(users);
+        });
+
+        socket.on("rooms", (roomObject) => {
+          setRoomInfo(roomObject);
+        });
+
+        socket.on("disconnect", () => {
+          socket.on("rooms", (roomObject) => {
+            setRoomInfo(roomObject);
+          });
+        });
+
+        socket.on("warning", (arg) => {
+          alert(arg);
         });
       });
 
@@ -73,6 +93,12 @@ function App() {
           <div>Disconnected</div>
         )}
       </ul>
+      <div className="rooms">
+        Rooms
+        {roomInfo.map((room, index) => (
+          <div key={index}>{room.roomId}</div>
+        ))}
+      </div>
       <button onClick={() => handleClick()}>
         {connectState ? "Disconnect" : "Connect"}
       </button>

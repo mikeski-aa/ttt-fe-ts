@@ -5,6 +5,8 @@ ul {
 body {
   margin: 0;
   padding: 0;
+  background-color: rgb(39, 39, 39);
+  color: rgb(197, 197, 197);
 }
 
 .mainHolder {
