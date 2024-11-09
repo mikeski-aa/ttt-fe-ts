@@ -116,7 +116,11 @@ function App() {
         value={{ socket, playerMarker, canClick, playBoard }}
       >
         <h1>Tic Tac Toe</h1>
-        {roomFull ? <GameBoard /> : null}
+        {roomFull ? (
+          <>
+            <GameBoard /> <h1>You are {playerMarker}</h1>
+          </>
+        ) : null}
       </GameContext.Provider>
       <ul>
         {connectState ? (
