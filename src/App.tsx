@@ -124,7 +124,10 @@ function App() {
         <h1>Tic Tac Toe</h1>
         {roomFull ? (
           <>
-            <GameBoard /> <h1>You are {playerMarker}</h1>
+            <GameBoard />{" "}
+            <h1 className={canClick ? "canMove yes" : "canMove no"}>
+              You are {playerMarker}
+            </h1>
           </>
         ) : null}
       </GameContext.Provider>

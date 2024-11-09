@@ -19,3 +19,11 @@ body {
   color: green;
   font-weight: bold;
 }
+
+.canMove.yes {
+  color: green;
+}
+
+.canMove.no {
+  /* color: red; */
+}
