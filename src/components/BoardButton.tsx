@@ -26,16 +26,13 @@ function BoardButton({
       return;
     }
 
-    if (gameContext.playBoard) {
-      const copyBoard: IBoardItem[] = [...gameContext.playBoard];
-
-      copyBoard.map((item) => {
-        if (item.x === xcoord && item.y === ycoord) {
-          item.marker = pmarker;
-        }
-      });
-
-      setBoard(copyBoard);
+    if (gameContext.playBoard && gameContext.socket) {
+      // setting up object we will be sending with click
+      const sentObject = {
+        coords: [xcoord, ycoord],
+        playerMarker: gameContext.playerMarker,
+      };
+      gameContext.socket.emit("userMove", sentObject);
     }
   };
 
