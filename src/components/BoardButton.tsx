@@ -4,7 +4,6 @@ import { GameContext } from "../App";
 
 function BoardButton({
   setBoard,
-  board,
   xcoord,
   ycoord,
   marker,
@@ -12,7 +11,6 @@ function BoardButton({
   pmarker,
 }: {
   setBoard: Dispatch<SetStateAction<IBoardItem[]>>;
-  board: IBoardItem[];
   xcoord: number;
   ycoord: number;
   row: number;
@@ -21,20 +19,24 @@ function BoardButton({
 }) {
   const gameContext = useContext(GameContext);
 
+  // on click -> emit event to check status
+  // check status of whether it can be clicked, and secondly update the board if it is correct
   const handleBtnClick = (xcoord: number, ycoord: number) => {
     if (!gameContext.canClick) {
       return;
     }
 
-    const copyBoard: IBoardItem[] = [...board];
+    if (gameContext.playBoard) {
+      const copyBoard: IBoardItem[] = [...gameContext.playBoard];
 
-    copyBoard.map((item) => {
-      if (item.x === xcoord && item.y === ycoord) {
-        item.marker = pmarker;
-      }
-    });
+      copyBoard.map((item) => {
+        if (item.x === xcoord && item.y === ycoord) {
+          item.marker = pmarker;
+        }
+      });
 
-    setBoard(copyBoard);
+      setBoard(copyBoard);
+    }
   };
 
   // if row does not match xcoord, we do not render those items

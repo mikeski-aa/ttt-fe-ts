@@ -3,6 +3,7 @@ import "./App.css";
 import { testcall } from "./services/testCalls";
 import { io, Socket } from "socket.io-client";
 import GameBoard from "./components/GameBoard";
+import { IBoardItem } from "./interface/boardInterface";
 
 interface IRoom {
   roomId: string;
@@ -13,24 +14,26 @@ interface IGameContext {
   socket: Socket | undefined;
   playerMarker: string;
   canClick: boolean;
+  playBoard: IBoardItem[] | undefined;
 }
 
 export const GameContext = createContext<IGameContext>({
   socket: undefined,
   playerMarker: "",
   canClick: false,
+  playBoard: undefined,
 });
 
 function App() {
   const [connectState, setConnectState] = useState<boolean>();
   const [socket, setSocket] = useState<Socket>();
   const [connectedUsers, setConnectedUsers] = useState<string[]>([]);
-  const [roomState, setRoomState] = useState<boolean>(false);
   const [roomInfo, setRoomInfo] = useState<IRoom[]>([]);
   const [room, setRoom] = useState<string>("");
   const [roomFull, setRoomFull] = useState<boolean>(false);
   const [playerMarker, setPlayerMarker] = useState<string>("");
   const [canClick, setCanClick] = useState<boolean>(false);
+  const [playBoard, setPlayBoard] = useState<IBoardItem[]>();
 
   useEffect(() => {
     if (socket) {
@@ -57,7 +60,14 @@ function App() {
         setRoomFull(false);
       });
 
+      // set player markers X or Y
       socket.on("playerMarker", setPlayerMarker);
+
+      // send the initial board state and set it up
+      socket.on("initialBoard", setPlayBoard);
+
+      // assign first move
+      socket.on("firstMove", setCanClick);
     }
 
     // added cleanup
@@ -69,6 +79,9 @@ function App() {
       socket?.off("roomId", setRoom);
       socket?.off("user join");
       socket?.off("disconnect");
+      socket?.off("firstmove", setCanClick);
+      socket?.off("playerMarker", setPlayerMarker);
+      socket?.off("initialBoard", setPlayBoard);
     };
   }, [socket]);
 
@@ -99,7 +112,9 @@ function App() {
 
   return (
     <div className="mainHolder">
-      <GameContext.Provider value={{ socket, playerMarker, canClick }}>
+      <GameContext.Provider
+        value={{ socket, playerMarker, canClick, playBoard }}
+      >
         <h1>Tic Tac Toe</h1>
         {roomFull ? <GameBoard /> : null}
       </GameContext.Provider>
