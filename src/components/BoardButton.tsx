@@ -1,5 +1,6 @@
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useContext } from "react";
 import { IBoardItem } from "../interface/boardInterface";
+import { GameContext } from "../App";
 
 function BoardButton({
   setBoard,
@@ -18,8 +19,13 @@ function BoardButton({
   marker: string;
   pmarker: string;
 }) {
-  const handleBtnClick = (xcoord: number, ycoord: number, marker: string) => {
-    alert(`${xcoord} ${ycoord} ${marker}`);
+  const gameContext = useContext(GameContext);
+
+  const handleBtnClick = (xcoord: number, ycoord: number) => {
+    if (!gameContext.canClick) {
+      return;
+    }
+
     const copyBoard: IBoardItem[] = [...board];
 
     copyBoard.map((item) => {
@@ -38,7 +44,7 @@ function BoardButton({
 
   return (
     <button
-      onClick={() => handleBtnClick(xcoord, ycoord, marker)}
+      onClick={() => handleBtnClick(xcoord, ycoord)}
       className="boardItem"
     >
       {marker}

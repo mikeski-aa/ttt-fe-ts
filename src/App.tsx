@@ -10,11 +10,15 @@ interface IRoom {
 }
 
 interface IGameContext {
+  socket: Socket | undefined;
   playerMarker: string;
+  canClick: boolean;
 }
 
 export const GameContext = createContext<IGameContext>({
+  socket: undefined,
   playerMarker: "",
+  canClick: false,
 });
 
 function App() {
@@ -26,6 +30,7 @@ function App() {
   const [room, setRoom] = useState<string>("");
   const [roomFull, setRoomFull] = useState<boolean>(false);
   const [playerMarker, setPlayerMarker] = useState<string>("");
+  const [canClick, setCanClick] = useState<boolean>(false);
 
   useEffect(() => {
     if (socket) {
@@ -94,7 +99,7 @@ function App() {
 
   return (
     <div className="mainHolder">
-      <GameContext.Provider value={{ playerMarker }}>
+      <GameContext.Provider value={{ socket, playerMarker, canClick }}>
         <h1>Tic Tac Toe</h1>
         {roomFull ? <GameBoard /> : null}
       </GameContext.Provider>
