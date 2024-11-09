@@ -68,6 +68,9 @@ function App() {
 
       // assign first move
       socket.on("firstMove", setCanClick);
+
+      // WINNER decleration
+      socket.on("gameOver", alert);
     }
 
     // added cleanup
