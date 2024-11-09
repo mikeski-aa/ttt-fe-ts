@@ -1,11 +1,13 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import "../styles/gameboard.css";
 import genBoard from "../utils/genBoard";
 import { IBoardItem } from "../interface/boardInterface";
 import BoardButton from "./BoardButton";
+import { GameContext } from "../App";
 
 function GameBoard() {
   const [board, setBoard] = useState<IBoardItem[]>(genBoard());
+  const gameContext = useContext(GameContext);
 
   console.log(board);
   return (
@@ -20,7 +22,7 @@ function GameBoard() {
             xcoord={item.x}
             ycoord={item.y}
             marker={item.marker}
-            pmarker="X"
+            pmarker={gameContext.playerMarker}
           />
         ))}
       </div>
@@ -34,7 +36,7 @@ function GameBoard() {
             xcoord={item.x}
             ycoord={item.y}
             marker={item.marker}
-            pmarker="X"
+            pmarker={gameContext.playerMarker}
           />
         ))}
       </div>
@@ -48,7 +50,7 @@ function GameBoard() {
             xcoord={item.x}
             ycoord={item.y}
             marker={item.marker}
-            pmarker="X"
+            pmarker={gameContext.playerMarker}
           />
         ))}
       </div>

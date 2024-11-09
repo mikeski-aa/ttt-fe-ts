@@ -18,7 +18,18 @@ function BoardButton({
   marker: string;
   pmarker: string;
 }) {
-  const handleBtnClick = (xcoord, ycoord, marker) => {};
+  const handleBtnClick = (xcoord: number, ycoord: number, marker: string) => {
+    alert(`${xcoord} ${ycoord} ${marker}`);
+    const copyBoard: IBoardItem[] = [...board];
+
+    copyBoard.map((item) => {
+      if (item.x === xcoord && item.y === ycoord) {
+        item.marker = pmarker;
+      }
+    });
+
+    setBoard(copyBoard);
+  };
 
   // if row does not match xcoord, we do not render those items
   if (row != xcoord) {

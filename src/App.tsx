@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 import "./App.css";
 import { testcall } from "./services/testCalls";
 import { io, Socket } from "socket.io-client";
@@ -9,6 +9,14 @@ interface IRoom {
   users: string[];
 }
 
+interface IGameContext {
+  playerMarker: string;
+}
+
+export const GameContext = createContext<IGameContext>({
+  playerMarker: "",
+});
+
 function App() {
   const [connectState, setConnectState] = useState<boolean>();
   const [socket, setSocket] = useState<Socket>();
@@ -17,6 +25,7 @@ function App() {
   const [roomInfo, setRoomInfo] = useState<IRoom[]>([]);
   const [room, setRoom] = useState<string>("");
   const [roomFull, setRoomFull] = useState<boolean>(false);
+  const [playerMarker, setPlayerMarker] = useState<string>("");
 
   useEffect(() => {
     if (socket) {
@@ -42,6 +51,8 @@ function App() {
         setRoom("");
         setRoomFull(false);
       });
+
+      socket.on("playerMarker", setPlayerMarker);
     }
 
     // added cleanup
@@ -83,8 +94,10 @@ function App() {
 
   return (
     <div className="mainHolder">
-      <h1>Tic Tac Toe</h1>
-      {roomFull ? <GameBoard /> : null}
+      <GameContext.Provider value={{ playerMarker }}>
+        <h1>Tic Tac Toe</h1>
+        {roomFull ? <GameBoard /> : null}
+      </GameContext.Provider>
       <ul>
         {connectState ? (
           <>
