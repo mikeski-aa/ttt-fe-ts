@@ -70,7 +70,9 @@ function App() {
       socket.on("firstMove", setCanClick);
 
       // WINNER decleration
-      socket.on("gameOver", alert);
+      socket.on("gameOver", (message) => {
+        alert(message);
+      });
     }
 
     // added cleanup
@@ -85,6 +87,7 @@ function App() {
       socket?.off("firstmove", setCanClick);
       socket?.off("playerMarker", setPlayerMarker);
       socket?.off("initialBoard", setPlayBoard);
+      socket?.off("gameOver");
     };
   }, [socket]);
 
