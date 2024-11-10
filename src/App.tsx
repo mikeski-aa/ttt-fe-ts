@@ -5,6 +5,7 @@ import { io, Socket } from "socket.io-client";
 import GameBoard from "./components/GameBoard";
 import { IBoardItem } from "./interface/boardInterface";
 import ModalTemplate from "./components/ModalTemplate";
+import MatchingModal from "./components/MatchingModal";
 
 interface IRoom {
   roomId: string;
@@ -29,16 +30,16 @@ function App() {
   const [connectState, setConnectState] = useState<boolean>();
   const [socket, setSocket] = useState<Socket>();
   const [connectedUsers, setConnectedUsers] = useState<string[]>([]);
-  const [roomInfo, setRoomInfo] = useState<IRoom[]>([]);
   const [room, setRoom] = useState<string>("");
   const [roomFull, setRoomFull] = useState<boolean>(false);
   const [playerMarker, setPlayerMarker] = useState<string>("");
   const [canClick, setCanClick] = useState<boolean>(false);
   const [playBoard, setPlayBoard] = useState<IBoardItem[]>();
-  const [winModal, setWinModal] = useState<boolean>(true);
+  const [winModal, setWinModal] = useState<boolean>(false);
   const [loseModal, setLoseModal] = useState<boolean>(false);
   const [drawModal, setDrawModal] = useState<boolean>(false);
   const [disconnectWin, setDisconnectWin] = useState<boolean>(false);
+  const [matchingModal, setMatchingModal] = useState<boolean>(false);
 
   const roomReset = (socket: Socket) => {
     setRoom("");
@@ -52,26 +53,15 @@ function App() {
       // states can be set directly by passing state setter
       socket.on("users", setConnectedUsers);
 
-      socket.on("rooms", setRoomInfo);
-
-      socket.on("warning", (arg) => {
-        alert(arg);
-        setRoom("");
-        setRoomFull(false);
-        socket.disconnect();
-        setConnectState(false);
-      });
-
       socket.on("roomId", setRoom);
 
-      socket.on("user join", (message) => {
-        // alert(message);
+      socket.on("user join", () => {
         setRoomFull(true);
+        setMatchingModal(false);
       });
 
       socket.on("disconnect", () => {
-        setRoom("");
-        setRoomFull(false);
+        roomReset(socket);
       });
 
       // set player markers X or Y
@@ -82,13 +72,6 @@ function App() {
 
       // assign first move
       socket.on("firstMove", setCanClick);
-
-      // WINNER decleration
-      socket.on("gameOver", (message) => {
-        alert(message);
-        socket.disconnect();
-        setConnectState(false);
-      });
 
       // on game won action
       socket.on("gameWon", (boolean) => {
@@ -101,21 +84,34 @@ function App() {
         setLoseModal(boolean);
         roomReset(socket);
       });
+
+      // on game draw
+      socket.on("gameDraw", (boolean) => {
+        setDrawModal(boolean);
+        roomReset(socket);
+      });
+
+      // on other player disconnect
+      socket.on("player disconnect", (boolean) => {
+        setDisconnectWin(boolean);
+        roomReset(socket);
+      });
     }
 
     // added cleanup
 
     return () => {
       socket?.off("users", setConnectedUsers);
-      socket?.off("rooms", setRoomInfo);
-      socket?.off("warning");
       socket?.off("roomId", setRoom);
       socket?.off("user join");
       socket?.off("disconnect");
       socket?.off("firstmove", setCanClick);
       socket?.off("playerMarker", setPlayerMarker);
       socket?.off("initialBoard", setPlayBoard);
-      socket?.off("gameOver");
+      socket?.off("gameWon");
+      socket?.off("gameLost");
+      socket?.off("gameDraw");
+      socket?.off("player disconnect");
     };
   }, [socket]);
 
@@ -123,6 +119,7 @@ function App() {
 
   const handleClick = async () => {
     if (!connectState) {
+      setMatchingModal(true);
       const newSocket = io("http://localhost:3000/");
       setSocket(newSocket);
       newSocket.on("connect", () => {
@@ -135,7 +132,7 @@ function App() {
     } else {
       if (socket) {
         socket.disconnect();
-        setConnectState(false);
+        roomReset(socket);
       }
     }
   };
@@ -144,12 +141,46 @@ function App() {
 
   return (
     <div className="mainHolder">
-      <ModalTemplate
-        text="Placeholder test text"
-        modalState={winModal}
-        setModalState={setWinModal}
-        type={"win"}
-      />
+      {winModal ? (
+        <ModalTemplate
+          text="You win!"
+          modalState={winModal}
+          setModalState={setWinModal}
+          type={"win"}
+        />
+      ) : null}
+      {loseModal ? (
+        <ModalTemplate
+          text="You lose!"
+          modalState={loseModal}
+          setModalState={setLoseModal}
+          type={"lose"}
+        />
+      ) : null}
+      {drawModal ? (
+        <ModalTemplate
+          text="Draw!"
+          modalState={drawModal}
+          setModalState={setDrawModal}
+          type={"draw"}
+        />
+      ) : null}
+      {disconnectWin ? (
+        <ModalTemplate
+          text="You win! The other player has disconnected!"
+          modalState={disconnectWin}
+          setModalState={setDisconnectWin}
+          type={"win"}
+        />
+      ) : null}
+      {matchingModal && socket ? (
+        <MatchingModal
+          modal={matchingModal}
+          setModal={setMatchingModal}
+          socket={socket}
+        />
+      ) : null}
+
       <GameContext.Provider
         value={{ socket, playerMarker, canClick, playBoard }}
       >

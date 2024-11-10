@@ -31,6 +31,14 @@
   font-weight: 600;
 }
 
-.modalText.win {
+.win {
   color: green;
+}
+
+.lose {
+  color: red;
+}
+
+.draw {
+  color: yellow;
 }
