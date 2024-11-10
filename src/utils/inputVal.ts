@@ -14,10 +14,16 @@ function validateInput(
   }
 }
 
-function validatePwMatch(pw: string, pwc: string) {
+function validatePwMatch(
+  pw: string,
+  pwc: string,
+  setState: Dispatch<SetStateAction<boolean>>
+) {
   if (pw === pwc) {
+    setState(false);
     return false;
   } else {
+    setState(true);
     return true;
   }
 }

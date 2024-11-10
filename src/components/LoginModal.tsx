@@ -18,8 +18,7 @@ function LoginModal({
   const [regUError, setRegUError] = useState<boolean>(false);
   const [regPError, setRegPError] = useState<boolean>(false);
   const [regCError, setRegCError] = useState<boolean>(false);
-  const [errText, setErrText] = useState<string>("Username too short");
-  const [errPwText, setErrPwText] = useState<string>("Password too short");
+  const [matchErr, setMatchErr] = useState<boolean>(false);
 
   const handleModalClose = () => {
     setModalState(!modalState);
@@ -38,17 +37,20 @@ function LoginModal({
     console.log("reg clicked");
     e.preventDefault();
 
+    // handle validation of input before submitting
     if (
       validateInput(regUname, 1, setRegUError) ||
       validateInput(regPw, 5, setRegPError) ||
       validateInput(regConfPw, 5, setRegCError) ||
-      validatePwMatch(regPw, regConfPw)
+      validatePwMatch(regPw, regConfPw, setMatchErr)
     ) {
       console.log(validateInput(regUname, 1, setRegUError));
       console.log(validateInput(regPw, 5, setRegPError));
       console.log(validateInput(regConfPw, 5, setRegCError));
-      return alert("Error detected");
+      return;
     }
+
+    // handle register
   };
 
   // set up all input handlers
@@ -62,10 +64,12 @@ function LoginModal({
         break;
       case "regP":
         validateInput(target.value, 5, setRegPError);
+        validatePwMatch(target.value, regConfPw, setMatchErr);
         setRegPw(target.value);
         break;
       case "regC":
         validateInput(target.value, 5, setRegCError);
+        validatePwMatch(target.value, regPw, setMatchErr);
         setRegConfPw(target.value);
         break;
       case "logU":
@@ -131,7 +135,7 @@ function LoginModal({
                   onChange={(e) => handleInput("regU", e)}
                 ></input>
                 <div className={regUError ? "error show" : "error hide"}>
-                  {errText}
+                  Username too short
                 </div>
               </div>
 
@@ -146,25 +150,27 @@ function LoginModal({
                   max={16}
                 ></input>
                 <div className={regPError ? "error show" : "error hide"}>
-                  {errPwText}
+                  Password too short
                 </div>
               </div>
-              <input
-                type="password"
-                placeholder="confirm password"
-                className="formInput"
-                value={regConfPw}
-                min={4}
-                max={16}
-                onChange={(e) => handleInput("regC", e)}
-              ></input>
 
               <div className="inputHolder">
+                <input
+                  type="password"
+                  placeholder="confirm password"
+                  className="formInput"
+                  value={regConfPw}
+                  min={4}
+                  max={16}
+                  onChange={(e) => handleInput("regC", e)}
+                ></input>
                 <div className={regCError ? "error show" : "error hide"}>
-                  {errPwText}
+                  Password too short
                 </div>
               </div>
-
+              <div className={matchErr ? "error show" : "error hide"}>
+                Passwords need to match!
+              </div>
               <button
                 type="submit"
                 className="submitBtn"
