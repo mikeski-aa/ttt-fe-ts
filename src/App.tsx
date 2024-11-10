@@ -40,6 +40,7 @@ function App() {
   const [drawModal, setDrawModal] = useState<boolean>(false);
   const [disconnectWin, setDisconnectWin] = useState<boolean>(false);
   const [matchingModal, setMatchingModal] = useState<boolean>(false);
+  const [winStreak, setWinStreak] = useState<number>(0);
 
   const roomReset = (socket: Socket) => {
     setRoom("");
@@ -75,12 +76,14 @@ function App() {
 
       // on game won action
       socket.on("gameWon", (boolean) => {
+        setWinStreak(winStreak + 1);
         setWinModal(boolean);
         roomReset(socket);
       });
 
       // on game lost action
       socket.on("gameLost", (boolean) => {
+        setWinStreak(0);
         setLoseModal(boolean);
         roomReset(socket);
       });
@@ -93,6 +96,7 @@ function App() {
 
       // on other player disconnect
       socket.on("player disconnect", (boolean) => {
+        setWinStreak(winStreak + 1);
         setDisconnectWin(boolean);
         roomReset(socket);
       });
@@ -189,12 +193,14 @@ function App() {
           <>
             <GameBoard />{" "}
             <h1 className={canClick ? "canMove yes" : "canMove no"}>
-              You are {playerMarker}
+              {canClick
+                ? `Your move! You are ${playerMarker}`
+                : "Waiting for other player to make a move!"}
             </h1>
           </>
         ) : null}
       </GameContext.Provider>
-      <ul>
+      {/* <ul>
         {connectState ? (
           <>
             <div>Connected</div>
@@ -213,15 +219,18 @@ function App() {
         ) : (
           <div>Disconnected</div>
         )}
-      </ul>
+      </ul> */}
 
-      <div className="yourRoom">
+      {/* <div className="yourRoom">
         {room === ""
           ? "Not conntected to a room"
           : `Connected to room: ${room}`}
-      </div>
+      </div> */}
+      {winStreak > -1 ? (
+        <div className="streak">Win streak: {winStreak}</div>
+      ) : null}
       <button onClick={() => handleClick()}>
-        {connectState ? "Quit Match" : "Match"}
+        {connectState ? "Quit Match" : "Find opponent"}
       </button>
     </div>
   );

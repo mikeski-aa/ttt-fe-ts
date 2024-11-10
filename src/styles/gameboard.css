@@ -1,5 +1,5 @@
 .gameBoard {
-  background-color: rgb(255, 255, 255);
+  background: none;
 }
 
 .row0,
@@ -9,7 +9,7 @@
 }
 
 .boardItem {
-  border-color: #231b1b;
+  border-color: #e980fc;
   border-radius: 0px;
   width: 10vh;
   height: 10vh;
@@ -18,9 +18,36 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  background-color: #231b1b;
+}
+
+.boardItem:hover {
+  background-color: #e980fc;
 }
 
 .boardMarker {
   width: 8vh;
   height: 8vh;
+  filter: invert(1);
+  transition-duration: 0.4s;
+}
+
+.boardMarker:hover {
+  filter: invert(0);
+}
+
+.row0 .boardItem:first-child {
+  border-radius: 5px 0px 0px 0px;
+}
+
+.row0 .boardItem:last-child {
+  border-radius: 0px 5px 0px 0px;
+}
+
+.row2 .boardItem:first-child {
+  border-radius: 0px 0px 0px 5px;
+}
+
+.row2 .boardItem:last-child {
+  border-radius: 0px 0px 5px 0px;
 }
