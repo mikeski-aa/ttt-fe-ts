@@ -5,7 +5,7 @@ ul {
 body {
   margin: 0;
   padding: 0;
-  background-color: rgb(39, 39, 39);
+  background-color: #231b1b;
   color: rgb(197, 197, 197);
 }
 
@@ -26,4 +26,21 @@ body {
 
 .canMove.no {
   /* color: red; */
+}
+
+button {
+  padding: 10px;
+  background: none;
+  border: 2px solid #e980fc;
+  color: #e980fc;
+  transition-duration: 0.4s;
+  border-radius: 5px;
+  font-weight: 700;
+  font-size: 1.5rem;
+}
+
+button:hover {
+  cursor: pointer;
+  background-color: #e980fc;
+  color: #231b1b;
 }

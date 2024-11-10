@@ -1,6 +1,7 @@
 import { Dispatch, SetStateAction } from "react";
 import "../styles/modaltemplate.css";
 import { Socket } from "socket.io-client";
+import spinner from "../assets/infinite-spinner.svg";
 
 function MatchingModal({
   modal,
@@ -24,10 +25,13 @@ function MatchingModal({
             X
           </button>
         </div>
-        <div className={`modalText`}>Looking for a player + gif here</div>
-        <button className="quitMatchingButton" onClick={handleModalClose}>
-          Exit matchmaker
-        </button>
+        <div className={`modalText`}>Looking for a player...</div>
+        <img className="loading" src={spinner} />
+        <div className="buttonHolder">
+          <button className="quitMatchingButton" onClick={handleModalClose}>
+            Exit matchmaker
+          </button>
+        </div>
       </div>
     </div>
   );
