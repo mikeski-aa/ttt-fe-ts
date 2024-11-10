@@ -4,6 +4,7 @@ import { testcall } from "./services/testCalls";
 import { io, Socket } from "socket.io-client";
 import GameBoard from "./components/GameBoard";
 import { IBoardItem } from "./interface/boardInterface";
+import ModalTemplate from "./components/ModalTemplate";
 
 interface IRoom {
   roomId: string;
@@ -34,6 +35,17 @@ function App() {
   const [playerMarker, setPlayerMarker] = useState<string>("");
   const [canClick, setCanClick] = useState<boolean>(false);
   const [playBoard, setPlayBoard] = useState<IBoardItem[]>();
+  const [winModal, setWinModal] = useState<boolean>(true);
+  const [loseModal, setLoseModal] = useState<boolean>(false);
+  const [drawModal, setDrawModal] = useState<boolean>(false);
+  const [disconnectWin, setDisconnectWin] = useState<boolean>(false);
+
+  const roomReset = (socket: Socket) => {
+    setRoom("");
+    setRoomFull(false);
+    socket.disconnect();
+    setConnectState(false);
+  };
 
   useEffect(() => {
     if (socket) {
@@ -46,6 +58,8 @@ function App() {
         alert(arg);
         setRoom("");
         setRoomFull(false);
+        socket.disconnect();
+        setConnectState(false);
       });
 
       socket.on("roomId", setRoom);
@@ -72,6 +86,20 @@ function App() {
       // WINNER decleration
       socket.on("gameOver", (message) => {
         alert(message);
+        socket.disconnect();
+        setConnectState(false);
+      });
+
+      // on game won action
+      socket.on("gameWon", (boolean) => {
+        setWinModal(boolean);
+        roomReset(socket);
+      });
+
+      // on game lost action
+      socket.on("gameLost", (boolean) => {
+        setLoseModal(boolean);
+        roomReset(socket);
       });
     }
 
@@ -96,7 +124,6 @@ function App() {
   const handleClick = async () => {
     if (!connectState) {
       const newSocket = io("http://localhost:3000/");
-      console.log(newSocket);
       setSocket(newSocket);
       newSocket.on("connect", () => {
         console.log("connected to socket");
@@ -108,7 +135,6 @@ function App() {
     } else {
       if (socket) {
         socket.disconnect();
-        console.log("disconnected user");
         setConnectState(false);
       }
     }
@@ -118,10 +144,16 @@ function App() {
 
   return (
     <div className="mainHolder">
+      <ModalTemplate
+        text="Placeholder test text"
+        modalState={winModal}
+        setModalState={setWinModal}
+        type={"win"}
+      />
       <GameContext.Provider
         value={{ socket, playerMarker, canClick, playBoard }}
       >
-        <h1>Tic Tac Toe</h1>
+        <h1>Multiplayer Tic Tac Toe</h1>
         {roomFull ? (
           <>
             <GameBoard />{" "}
@@ -158,7 +190,7 @@ function App() {
           : `Connected to room: ${room}`}
       </div>
       <button onClick={() => handleClick()}>
-        {connectState ? "Disconnect" : "Connect"}
+        {connectState ? "Quit Match" : "Match"}
       </button>
     </div>
   );
