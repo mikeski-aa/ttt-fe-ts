@@ -6,6 +6,7 @@ import GameBoard from "./components/GameBoard";
 import { IBoardItem } from "./interface/boardInterface";
 import ModalTemplate from "./components/ModalTemplate";
 import MatchingModal from "./components/MatchingModal";
+import LoginModal from "./components/LoginModal";
 
 interface IRoom {
   roomId: string;
@@ -142,8 +143,9 @@ function App() {
     }
   };
 
-  const handleLoginClick = () => {};
-  const handleRoomJoin = () => {};
+  const handleLoginClick = () => {
+    setLoginModal(true);
+  };
 
   return (
     <div className="mainHolder">
@@ -185,6 +187,10 @@ function App() {
           setModal={setMatchingModal}
           socket={socket}
         />
+      ) : null}
+
+      {loginModal ? (
+        <LoginModal modalState={loginModal} setModalState={setLoginModal} />
       ) : null}
 
       <GameContext.Provider

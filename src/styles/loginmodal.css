@@ -1,0 +1,12 @@
+.logregform {
+  display: flex;
+  flex-direction: column;
+}
+
+.formInput {
+  width: fit-content;
+}
+
+.submitBtn {
+  width: fit-content;
+}

@@ -49,3 +49,11 @@ button:hover {
   font-weight: 600;
   font-size: 1.5rem;
 }
+
+.loginButton {
+  position: absolute;
+  left: 0;
+  top: 0;
+  margin-left: 5px;
+  margin-top: 5px;
+}
