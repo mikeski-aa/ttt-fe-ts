@@ -15,4 +15,12 @@
   height: 10vh;
   font-size: 4rem;
   color: #231b1b;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.boardMarker {
+  width: 8vh;
+  height: 8vh;
 }

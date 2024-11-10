@@ -1,7 +1,7 @@
 import { Dispatch, SetStateAction, useContext } from "react";
 import { IBoardItem } from "../interface/boardInterface";
 import { GameContext } from "../App";
-import cross from "../assets/cross-svgrepo-com.svg";
+import cross from "../assets/cross-sign-svgrepo-com.svg";
 import circle from "../assets/empty-circle-svgrepo-com.svg";
 
 function BoardButton({
@@ -46,9 +46,11 @@ function BoardButton({
   return (
     <button
       onClick={() => handleBtnClick(xcoord, ycoord)}
-      className="boardItem"
+      className={`boardItem ${marker}`}
     >
-      {marker}
+      {marker === "" ? null : (
+        <img className="boardMarker" src={marker === "X" ? cross : circle} />
+      )}
     </button>
   );
 }
