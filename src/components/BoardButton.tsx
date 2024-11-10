@@ -1,6 +1,8 @@
 import { Dispatch, SetStateAction, useContext } from "react";
 import { IBoardItem } from "../interface/boardInterface";
 import { GameContext } from "../App";
+import cross from "../assets/cross-svgrepo-com.svg";
+import circle from "../assets/empty-circle-svgrepo-com.svg";
 
 function BoardButton({
   setBoard,
