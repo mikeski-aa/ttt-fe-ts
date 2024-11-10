@@ -41,6 +41,7 @@ function App() {
   const [disconnectWin, setDisconnectWin] = useState<boolean>(false);
   const [matchingModal, setMatchingModal] = useState<boolean>(false);
   const [winStreak, setWinStreak] = useState<number>(0);
+  const [loginModal, setLoginModal] = useState<boolean>(false);
 
   const roomReset = (socket: Socket) => {
     setRoom("");
@@ -141,6 +142,7 @@ function App() {
     }
   };
 
+  const handleLoginClick = () => {};
   const handleRoomJoin = () => {};
 
   return (
@@ -231,6 +233,9 @@ function App() {
       ) : null}
       <button onClick={() => handleClick()}>
         {connectState ? "Quit Match" : "Find opponent"}
+      </button>
+      <button onClick={() => handleLoginClick()} className="loginButton">
+        Login
       </button>
     </div>
   );
