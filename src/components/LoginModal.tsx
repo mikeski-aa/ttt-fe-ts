@@ -9,6 +9,11 @@ function LoginModal({
   setModalState: Dispatch<SetStateAction<boolean>>;
 }) {
   const [toggleForm, setToggleForm] = useState<boolean>(true);
+  const [regUname, setRegUname] = useState<string>("");
+  const [regPw, setRegPw] = useState<string>("");
+  const [regConfPw, setRegConfPw] = useState<string>("");
+  const [logUname, setLogUname] = useState<string>("");
+  const [logPw, setLogPw] = useState<string>("");
 
   const handleModalClose = () => {
     setModalState(!modalState);
@@ -28,6 +33,22 @@ function LoginModal({
     e.preventDefault();
   };
 
+  // set up all input handlers
+  const handleInput = (input: string, e: SyntheticEvent) => {
+    const target = e.target as HTMLInputElement;
+    if (input === "regU") {
+      setRegUname(target.value);
+    } else if (input === "regP") {
+      setRegPw(target.value);
+    } else if (input === "regC") {
+      setRegConfPw(target.value);
+    } else if (input === "logU") {
+      setLogUname(target.value);
+    } else if (input === "logP") {
+      setLogPw(target.value);
+    }
+  };
+
   return (
     <div className="modal">
       <div className="modalContent">
@@ -44,11 +65,15 @@ function LoginModal({
                 type="text"
                 placeholder="username"
                 className="formInput"
+                value={logUname}
+                onChange={(e) => handleInput("logU", e)}
               ></input>
               <input
                 type="password"
                 placeholder="password"
                 className="formInput"
+                value={logPw}
+                onChange={(e) => handleInput("logP", e)}
               ></input>
               <button
                 type="submit"
@@ -69,16 +94,22 @@ function LoginModal({
                 type="text"
                 placeholder="username"
                 className="formInput"
+                value={regUname}
+                onChange={(e) => handleInput("regP", e)}
               ></input>
               <input
                 type="password"
                 placeholder="password"
                 className="formInput"
+                value={regPw}
+                onChange={(e) => handleInput("regU", e)}
               ></input>
               <input
                 type="password"
                 placeholder="confirm password"
                 className="formInput"
+                value={regConfPw}
+                onChange={(e) => handleInput("regC", e)}
               ></input>
 
               <button
