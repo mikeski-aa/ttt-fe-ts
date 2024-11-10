@@ -1,5 +1,6 @@
 import { Dispatch, SetStateAction, SyntheticEvent, useState } from "react";
 import "../styles/loginmodal.css";
+import { validateInput, validatePwMatch } from "../utils/inputVal";
 
 function LoginModal({
   modalState,
@@ -17,8 +18,8 @@ function LoginModal({
   const [regUError, setRegUError] = useState<boolean>(false);
   const [regPError, setRegPError] = useState<boolean>(false);
   const [regCError, setRegCError] = useState<boolean>(false);
-  const [errText, setErrText] = useState<string>("");
-  const [errPwText, setErrPwText] = useState<string>("");
+  const [errText, setErrText] = useState<string>("Username too short");
+  const [errPwText, setErrPwText] = useState<string>("Password too short");
 
   const handleModalClose = () => {
     setModalState(!modalState);
@@ -37,27 +38,16 @@ function LoginModal({
     console.log("reg clicked");
     e.preventDefault();
 
-    if (regUname.length < 1) {
-      setRegUError(true);
-      setErrText("Username is required");
-    } else {
-      setRegUError(false);
-    }
-
-    if (regPw.length < 5) {
-      setRegPError(true);
-      setErrPwText("Password is too short");
-    } else {
-      setRegPError(false);
-      setErrPwText("");
-    }
-
-    if (regConfPw.length < 5) {
-      setRegCError(true);
-      setErrPwText("Password is too short");
-    } else {
-      setRegCError(false);
-      setErrPwText("");
+    if (
+      validateInput(regUname, 1, setRegUError) ||
+      validateInput(regPw, 5, setRegPError) ||
+      validateInput(regConfPw, 5, setRegCError) ||
+      validatePwMatch(regPw, regConfPw)
+    ) {
+      console.log(validateInput(regUname, 1, setRegUError));
+      console.log(validateInput(regPw, 5, setRegPError));
+      console.log(validateInput(regConfPw, 5, setRegCError));
+      return alert("Error detected");
     }
   };
 
@@ -67,15 +57,15 @@ function LoginModal({
 
     switch (input) {
       case "regU":
-        if (target.value.length > 0) {
-          setRegUError(false);
-        }
+        validateInput(target.value, 1, setRegUError);
         setRegUname(target.value);
         break;
       case "regP":
+        validateInput(target.value, 5, setRegPError);
         setRegPw(target.value);
         break;
       case "regC":
+        validateInput(target.value, 5, setRegCError);
         setRegConfPw(target.value);
         break;
       case "logU":
@@ -170,7 +160,7 @@ function LoginModal({
               ></input>
 
               <div className="inputHolder">
-                <div className={regConfPw ? "error show" : "error hide"}>
+                <div className={regCError ? "error show" : "error hide"}>
                   {errPwText}
                 </div>
               </div>
