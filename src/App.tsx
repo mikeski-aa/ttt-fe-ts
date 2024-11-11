@@ -147,13 +147,19 @@ function App() {
           id: userInfo.id,
           gameswon: userInfo.gameswon,
           gameslost: userInfo.gameslost,
-          winstreak: userInfo.winstreak,
+          currentstreak: userInfo.currentstreak,
+          maxstreak: userInfo.maxstreak,
         });
         return;
       }
     }
 
     setLoginModal(true);
+  };
+
+  const handleLogoutClick = () => {
+    setUser(undefined);
+    localStorage.removeItem("token");
   };
 
   return (
@@ -199,7 +205,11 @@ function App() {
       ) : null}
 
       {loginModal ? (
-        <LoginModal modalState={loginModal} setModalState={setLoginModal} />
+        <LoginModal
+          modalState={loginModal}
+          setModalState={setLoginModal}
+          setUser={setUser}
+        />
       ) : null}
 
       <GameContext.Provider
@@ -217,32 +227,6 @@ function App() {
           </>
         ) : null}
       </GameContext.Provider>
-      {/* <ul>
-        {connectState ? (
-          <>
-            <div>Connected</div>
-
-            {connectedUsers.map((user, index) => (
-              <li
-                key={index}
-                className={
-                  socket ? (socket.id == user ? "me" : undefined) : undefined
-                }
-              >
-                {user}
-              </li>
-            ))}
-          </>
-        ) : (
-          <div>Disconnected</div>
-        )}
-      </ul> */}
-
-      {/* <div className="yourRoom">
-        {room === ""
-          ? "Not conntected to a room"
-          : `Connected to room: ${room}`}
-      </div> */}
       {winStreak > -1 ? (
         <div className="streak">Win streak: {winStreak}</div>
       ) : null}
@@ -250,18 +234,24 @@ function App() {
         {connectState ? "Quit Match" : "Find opponent"}
       </button>
 
-      {!user ? (
+      {!user && !connectState ? (
         <button onClick={() => handleLoginClick()} className="loginButton">
           Login
         </button>
       ) : null}
 
+      {user && !connectState ? (
+        <button onClick={() => handleLogoutClick()} className="loginButton">
+          Logout
+        </button>
+      ) : null}
       {user ? (
         <div className="userInfoBar">
           <div className="userInfo">{user.username}</div>
           <div className="userInfo">Games won: {user.gameswon}</div>
           <div className="userInfo">Games lost: {user.gameslost}</div>
-          <div className="userInfo">Winstreak: {user.winstreak}</div>
+          <div className="userInfo">Current streak: {user.currentstreak}</div>
+          <div className="userInfo">Highest streak: {user.maxstreak}</div>
         </div>
       ) : null}
     </div>

@@ -6,7 +6,8 @@ export interface IResponse {
   errorMessage?: string;
   gameswon?: number;
   gameslost?: number;
-  winstreak?: number;
+  currentstreak?: number;
+  maxstreak?: number;
 }
 
 export interface IUser {
@@ -14,5 +15,6 @@ export interface IUser {
   id?: number;
   gameswon?: number;
   gameslost?: number;
-  winstreak?: number;
+  currentstreak?: number;
+  maxstreak?: number;
 }

@@ -2,13 +2,16 @@ import { Dispatch, SetStateAction, SyntheticEvent, useState } from "react";
 import "../styles/loginmodal.css";
 import { validateInput, validatePwMatch } from "../utils/inputVal";
 import { createUser, loginUser, tokenSend } from "../services/userCalls";
+import { IUser } from "../interface/responseInterface";
 
 function LoginModal({
   modalState,
   setModalState,
+  setUser,
 }: {
   modalState: boolean;
   setModalState: Dispatch<SetStateAction<boolean>>;
+  setUser: Dispatch<SetStateAction<IUser | undefined>>;
 }) {
   const [toggleForm, setToggleForm] = useState<boolean>(true);
   const [regUname, setRegUname] = useState<string>("");
@@ -44,15 +47,25 @@ function LoginModal({
       return;
     }
 
-    const user = await loginUser(logUname, logPw);
+    const userInfo = await loginUser(logUname, logPw);
 
     // if logging in error
-    if (user.error) {
+    if (userInfo.error) {
       return setLogError(true);
     }
 
     setLogError(false);
-    console.log(user);
+    setModalState(!modalState);
+    if (userInfo) {
+      setUser({
+        username: userInfo.username,
+        id: userInfo.id,
+        gameswon: userInfo.gameswon,
+        gameslost: userInfo.gameslost,
+        currentstreak: userInfo.currentstreak,
+        maxstreak: userInfo.maxstreak,
+      });
+    }
   };
 
   const handleRegisterClick = async (e: SyntheticEvent) => {
