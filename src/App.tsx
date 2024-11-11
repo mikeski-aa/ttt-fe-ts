@@ -8,7 +8,12 @@ import MatchingModal from "./components/MatchingModal";
 import LoginModal from "./components/LoginModal";
 import { IUser } from "./interface/responseInterface";
 import { tokenSend } from "./services/userCalls";
-import { updateDraws, updateLoss, updateWins } from "./services/gameCalls";
+import {
+  updateDraws,
+  updateLoss,
+  updateLossForDC,
+  updateWins,
+} from "./services/gameCalls";
 
 interface IRoom {
   roomId: string;
@@ -134,6 +139,19 @@ function App() {
           }
         }
       });
+
+      socket.on("handleDisconnectLoss", async (item) => {
+        if (user) {
+          const filtered = item.filter((item: number) => item !== user.id);
+          console.log(filtered[0]);
+          await updateLossForDC(filtered[0]);
+        } else {
+          const filtered = item.filter(
+            (item: number) => typeof item === "number"
+          );
+          await updateLossForDC(filtered[0]);
+        }
+      });
     }
 
     // added cleanup
@@ -148,6 +166,7 @@ function App() {
       socket?.off("gameLost");
       socket?.off("gameDraw");
       socket?.off("player disconnect");
+      socket?.off("handleDisconnectLoss");
     };
   }, [socket]);
 
@@ -158,13 +177,17 @@ function App() {
       setMatchingModal(true);
       const newSocket = io("http://localhost:3000/");
       setSocket(newSocket);
+
       newSocket.on("connect", () => {
         console.log("connected to socket");
         setConnectState(true);
+        // immediately send user info
+        if (user) {
+          newSocket.emit("userInfo", user.id);
+        } else {
+          newSocket.emit("userInfo", null);
+        }
       });
-
-      // test sending a message
-      newSocket.emit("chat message", "hello world");
     } else {
       if (socket) {
         socket.disconnect();

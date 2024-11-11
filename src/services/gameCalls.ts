@@ -67,4 +67,29 @@ async function updateDraws() {
   }
 }
 
-export { updateWins, updateLoss, updateDraws };
+async function updateLossForDC(id: number) {
+  const url = URL_CONST + "dcloss";
+  const newBody = {
+    id: id,
+  };
+  try {
+    const response = await fetch(url, {
+      method: "PUT",
+      headers: getHeaderInfo(),
+      body: JSON.stringify(newBody),
+    });
+    if (!response.ok) {
+      console.log(response.status);
+      return { error: true, errorMessage: "Error validating user" };
+    }
+
+    const json: IResponse = await response.json();
+
+    console.log(json);
+    return json;
+  } catch (error) {
+    return { error: true };
+  }
+}
+
+export { updateWins, updateLoss, updateDraws, updateLossForDC };
