@@ -87,9 +87,21 @@ function LoginModal({
     }
 
     // handle register
-    const userInfo = await createUser(regUname, regPw, regConfPw);
+    const reggedUser = await createUser(regUname, regPw, regConfPw);
 
-    console.log(userInfo);
+    if (!reggedUser.error) {
+      const userInfo = await loginUser(regUname, regPw);
+      setModalState(!modalState);
+      setUser({
+        username: userInfo.username,
+        id: userInfo.id,
+        gameswon: userInfo.gameswon,
+        gameslost: userInfo.gameslost,
+        gamesdrawn: userInfo.gamesdrawn,
+        currentstreak: userInfo.currentstreak,
+        maxstreak: userInfo.maxstreak,
+      });
+    }
   };
 
   // set up all input handlers
@@ -118,11 +130,6 @@ function LoginModal({
         setLogPw(target.value);
         break;
     }
-  };
-
-  const handleTokenSend = async () => {
-    const response = await tokenSend();
-    console.log(response);
   };
 
   return (
@@ -236,9 +243,6 @@ function LoginModal({
                 Register
               </button>
             </form>
-            <button className="goRegister" onClick={handleTokenSend}>
-              Test token sending
-            </button>
             <button className="goRegister" onClick={handleToggleClick}>
               Already have an account? Login
             </button>

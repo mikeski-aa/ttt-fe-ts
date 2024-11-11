@@ -24,7 +24,7 @@ async function createUser(
       return { error: true, errorMessage: "Register error" };
     }
 
-    const json: Promise<IResponse> = await response.json();
+    const json: IResponse = await response.json();
 
     console.log(json);
     return json;

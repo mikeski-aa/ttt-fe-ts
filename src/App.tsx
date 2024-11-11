@@ -170,8 +170,6 @@ function App() {
     };
   }, [socket]);
 
-  useEffect(() => {});
-
   const handleClick = async () => {
     if (!connectState) {
       setMatchingModal(true);
@@ -192,6 +190,12 @@ function App() {
       if (socket) {
         socket.disconnect();
         roomReset(socket);
+
+        // force user update to state on volountary quit click
+        if (user && user.gameslost) {
+          let gameslostnew = user.gameslost + 1;
+          setUser({ ...user, gameslost: gameslostnew });
+        }
       }
     }
   };
