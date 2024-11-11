@@ -1,7 +1,7 @@
 import { Dispatch, SetStateAction, SyntheticEvent, useState } from "react";
 import "../styles/loginmodal.css";
 import { validateInput, validatePwMatch } from "../utils/inputVal";
-import { createUser } from "../services/userCalls";
+import { createUser, loginUser } from "../services/userCalls";
 
 function LoginModal({
   modalState,
@@ -20,6 +20,9 @@ function LoginModal({
   const [regPError, setRegPError] = useState<boolean>(false);
   const [regCError, setRegCError] = useState<boolean>(false);
   const [matchErr, setMatchErr] = useState<boolean>(false);
+  const [logUError, setLogUError] = useState<boolean>(false);
+  const [logPError, setLogPError] = useState<boolean>(false);
+  const [logError, setLogError] = useState<boolean>(false);
 
   const handleModalClose = () => {
     setModalState(!modalState);
@@ -32,6 +35,23 @@ function LoginModal({
   const handleLoginClick = async (e: SyntheticEvent) => {
     console.log("login clicked");
     e.preventDefault();
+
+    if (
+      validateInput(logUname, 1, setLogUError) ||
+      validateInput(logPw, 5, setLogPError)
+    ) {
+      return;
+    }
+
+    const user = await loginUser(logUname, logPw);
+
+    // if logging in error
+    if (user.error) {
+      return setLogError(true);
+    }
+
+    setLogError(false);
+    console.log(user);
   };
 
   const handleRegisterClick = async (e: SyntheticEvent) => {
@@ -53,6 +73,7 @@ function LoginModal({
 
     // handle register
     const userInfo = await createUser(regUname, regPw, regConfPw);
+
     console.log(userInfo);
   };
 
@@ -96,22 +117,35 @@ function LoginModal({
         {toggleForm ? (
           <div className={`loginDiv`}>
             <form className="logregform">
-              <input
-                type="text"
-                placeholder="username"
-                className="formInput"
-                value={logUname}
-                min={1}
-                max={16}
-                onChange={(e) => handleInput("logU", e)}
-              ></input>
-              <input
-                type="password"
-                placeholder="password"
-                className="formInput"
-                value={logPw}
-                onChange={(e) => handleInput("logP", e)}
-              ></input>
+              <div className="inputholder">
+                <input
+                  type="text"
+                  placeholder="username"
+                  className="formInput"
+                  value={logUname}
+                  min={1}
+                  max={16}
+                  onChange={(e) => handleInput("logU", e)}
+                ></input>
+                <div className={logUError ? "error show" : "error hide"}>
+                  Username too short
+                </div>
+              </div>
+              <div className="inputholder">
+                <input
+                  type="password"
+                  placeholder="password"
+                  className="formInput"
+                  value={logPw}
+                  onChange={(e) => handleInput("logP", e)}
+                ></input>
+                <div className={logPError ? "error show" : "error hide"}>
+                  Password too short
+                </div>
+              </div>
+              <div className={logError ? "error show" : "error hide"}>
+                Username or password is incorrect
+              </div>
               <button
                 type="submit"
                 className="submitBtn"
