@@ -1,7 +1,7 @@
 import { Dispatch, SetStateAction, SyntheticEvent, useState } from "react";
 import "../styles/loginmodal.css";
 import { validateInput, validatePwMatch } from "../utils/inputVal";
-import { createUser, loginUser } from "../services/userCalls";
+import { createUser, loginUser, tokenSend } from "../services/userCalls";
 
 function LoginModal({
   modalState,
@@ -36,6 +36,7 @@ function LoginModal({
     console.log("login clicked");
     e.preventDefault();
 
+    // make sure input is valid length
     if (
       validateInput(logUname, 1, setLogUError) ||
       validateInput(logPw, 5, setLogPError)
@@ -103,6 +104,11 @@ function LoginModal({
         setLogPw(target.value);
         break;
     }
+  };
+
+  const handleTokenSend = async () => {
+    const response = await tokenSend();
+    console.log(response);
   };
 
   return (
@@ -216,6 +222,9 @@ function LoginModal({
                 Register
               </button>
             </form>
+            <button className="goRegister" onClick={handleTokenSend}>
+              Test token sending
+            </button>
             <button className="goRegister" onClick={handleToggleClick}>
               Already have an account? Login
             </button>

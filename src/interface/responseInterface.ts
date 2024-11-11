@@ -4,4 +4,15 @@ export interface IResponse {
   id?: number;
   token?: string;
   errorMessage?: string;
+  gameswon?: number;
+  gameslost?: number;
+  winstreak?: number;
+}
+
+export interface IUser {
+  username?: string;
+  id?: number;
+  gameswon?: number;
+  gameslost?: number;
+  winstreak?: number;
 }

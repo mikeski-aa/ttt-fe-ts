@@ -55,7 +55,12 @@ async function loginUser(
       return { error: true, errorMessage: "Error validating user" };
     }
 
-    const json: Promise<IResponse> = await response.json();
+    const json: IResponse = await response.json();
+
+    // assuming json.token is returned
+    if (json.token) {
+      localStorage.setItem("token", json.token);
+    }
 
     console.log(json);
     return json;
@@ -65,4 +70,25 @@ async function loginUser(
   }
 }
 
-export { createUser, loginUser };
+async function tokenSend() {
+  const url = URL_CONST + "token";
+  try {
+    const response = await fetch(url, {
+      method: "GET",
+      headers: getHeaderInfo(),
+    });
+    if (!response.ok) {
+      console.log(response.status);
+      return { error: true, errorMessage: "Error validating user" };
+    }
+
+    const json: IResponse = await response.json();
+
+    console.log(json);
+    return json;
+  } catch (error) {
+    return { error: true };
+  }
+}
+
+export { createUser, loginUser, tokenSend };

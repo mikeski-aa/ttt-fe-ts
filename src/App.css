@@ -57,3 +57,16 @@ button:hover {
   margin-left: 5px;
   margin-top: 5px;
 }
+
+.userInfoBar {
+  border: 2px solid #e980fc;
+  color: #e980fc;
+  padding: 5px;
+  border-radius: 5px;
+  font-size: 2rem;
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin-top: 3px;
+  margin-right: 3px;
+}

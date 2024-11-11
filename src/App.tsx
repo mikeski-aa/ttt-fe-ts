@@ -7,6 +7,8 @@ import { IBoardItem } from "./interface/boardInterface";
 import ModalTemplate from "./components/ModalTemplate";
 import MatchingModal from "./components/MatchingModal";
 import LoginModal from "./components/LoginModal";
+import { IUser } from "./interface/responseInterface";
+import { tokenSend } from "./services/userCalls";
 
 interface IRoom {
   roomId: string;
@@ -30,8 +32,6 @@ export const GameContext = createContext<IGameContext>({
 function App() {
   const [connectState, setConnectState] = useState<boolean>();
   const [socket, setSocket] = useState<Socket>();
-  const [connectedUsers, setConnectedUsers] = useState<string[]>([]);
-  const [room, setRoom] = useState<string>("");
   const [roomFull, setRoomFull] = useState<boolean>(false);
   const [playerMarker, setPlayerMarker] = useState<string>("");
   const [canClick, setCanClick] = useState<boolean>(false);
@@ -43,9 +43,9 @@ function App() {
   const [matchingModal, setMatchingModal] = useState<boolean>(false);
   const [winStreak, setWinStreak] = useState<number>(0);
   const [loginModal, setLoginModal] = useState<boolean>(false);
+  const [user, setUser] = useState<IUser>();
 
   const roomReset = (socket: Socket) => {
-    setRoom("");
     setRoomFull(false);
     socket.disconnect();
     setConnectState(false);
@@ -53,11 +53,6 @@ function App() {
 
   useEffect(() => {
     if (socket) {
-      // states can be set directly by passing state setter
-      socket.on("users", setConnectedUsers);
-
-      socket.on("roomId", setRoom);
-
       socket.on("user join", () => {
         setRoomFull(true);
         setMatchingModal(false);
@@ -107,8 +102,6 @@ function App() {
     // added cleanup
 
     return () => {
-      socket?.off("users", setConnectedUsers);
-      socket?.off("roomId", setRoom);
       socket?.off("user join");
       socket?.off("disconnect");
       socket?.off("firstmove", setCanClick);
@@ -143,7 +136,23 @@ function App() {
     }
   };
 
-  const handleLoginClick = () => {
+  const handleLoginClick = async () => {
+    if (localStorage.getItem("token")) {
+      // inform user we are fetching their info
+      const userInfo = await tokenSend();
+
+      if (!userInfo.error) {
+        setUser({
+          username: userInfo.username,
+          id: userInfo.id,
+          gameswon: userInfo.gameswon,
+          gameslost: userInfo.gameslost,
+          winstreak: userInfo.winstreak,
+        });
+        return;
+      }
+    }
+
     setLoginModal(true);
   };
 
@@ -240,9 +249,21 @@ function App() {
       <button onClick={() => handleClick()}>
         {connectState ? "Quit Match" : "Find opponent"}
       </button>
-      <button onClick={() => handleLoginClick()} className="loginButton">
-        Login
-      </button>
+
+      {!user ? (
+        <button onClick={() => handleLoginClick()} className="loginButton">
+          Login
+        </button>
+      ) : null}
+
+      {user ? (
+        <div className="userInfoBar">
+          <div className="userInfo">{user.username}</div>
+          <div className="userInfo">Games won: {user.gameswon}</div>
+          <div className="userInfo">Games lost: {user.gameslost}</div>
+          <div className="userInfo">Winstreak: {user.winstreak}</div>
+        </div>
+      ) : null}
     </div>
   );
 }
