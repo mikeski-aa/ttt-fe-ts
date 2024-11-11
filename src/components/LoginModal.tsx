@@ -1,6 +1,7 @@
 import { Dispatch, SetStateAction, SyntheticEvent, useState } from "react";
 import "../styles/loginmodal.css";
 import { validateInput, validatePwMatch } from "../utils/inputVal";
+import { createUser } from "../services/userCalls";
 
 function LoginModal({
   modalState,
@@ -51,6 +52,8 @@ function LoginModal({
     }
 
     // handle register
+    const userInfo = await createUser(regUname, regPw, regConfPw);
+    console.log(userInfo);
   };
 
   // set up all input handlers
