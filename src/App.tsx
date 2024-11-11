@@ -1,6 +1,5 @@
 import { createContext, useEffect, useState } from "react";
 import "./App.css";
-import { testcall } from "./services/testCalls";
 import { io, Socket } from "socket.io-client";
 import GameBoard from "./components/GameBoard";
 import { IBoardItem } from "./interface/boardInterface";
@@ -9,6 +8,7 @@ import MatchingModal from "./components/MatchingModal";
 import LoginModal from "./components/LoginModal";
 import { IUser } from "./interface/responseInterface";
 import { tokenSend } from "./services/userCalls";
+import { updateDraws, updateLoss, updateWins } from "./services/gameCalls";
 
 interface IRoom {
   roomId: string;
@@ -49,6 +49,7 @@ function App() {
     setRoomFull(false);
     socket.disconnect();
     setConnectState(false);
+    setCanClick(false);
   };
 
   useEffect(() => {
@@ -72,30 +73,66 @@ function App() {
       socket.on("firstMove", setCanClick);
 
       // on game won action
-      socket.on("gameWon", (boolean) => {
+      socket.on("gameWon", async (boolean) => {
         setWinStreak(winStreak + 1);
         setWinModal(boolean);
         roomReset(socket);
+
+        if (user) {
+          const newUser = await updateWins();
+
+          // update state to reflect new score
+          if (!newUser.error) {
+            setUser(newUser);
+          }
+        }
       });
 
       // on game lost action
-      socket.on("gameLost", (boolean) => {
+      socket.on("gameLost", async (boolean) => {
         setWinStreak(0);
         setLoseModal(boolean);
         roomReset(socket);
+
+        if (user) {
+          const newUser = await updateLoss();
+
+          // update state to reflect new score
+          if (!newUser.error) {
+            setUser(newUser);
+          }
+        }
       });
 
       // on game draw
-      socket.on("gameDraw", (boolean) => {
+      socket.on("gameDraw", async (boolean) => {
         setDrawModal(boolean);
         roomReset(socket);
+
+        if (user) {
+          const newUser = await updateDraws();
+
+          // update state to reflect new score
+          if (!newUser.error) {
+            setUser(newUser);
+          }
+        }
       });
 
       // on other player disconnect
-      socket.on("player disconnect", (boolean) => {
+      socket.on("player disconnect", async (boolean) => {
         setWinStreak(winStreak + 1);
         setDisconnectWin(boolean);
         roomReset(socket);
+
+        if (user) {
+          const newUser = await updateWins();
+
+          // update state to reflect new score
+          if (!newUser.error) {
+            setUser(newUser);
+          }
+        }
       });
     }
 
@@ -147,6 +184,7 @@ function App() {
           id: userInfo.id,
           gameswon: userInfo.gameswon,
           gameslost: userInfo.gameslost,
+          gamesdrawn: userInfo.gamesdrawn,
           currentstreak: userInfo.currentstreak,
           maxstreak: userInfo.maxstreak,
         });
@@ -250,6 +288,7 @@ function App() {
           <div className="userInfo">{user.username}</div>
           <div className="userInfo">Games won: {user.gameswon}</div>
           <div className="userInfo">Games lost: {user.gameslost}</div>
+          <div className="userInfo">Games drawn: {user.gamesdrawn}</div>
           <div className="userInfo">Current streak: {user.currentstreak}</div>
           <div className="userInfo">Highest streak: {user.maxstreak}</div>
         </div>

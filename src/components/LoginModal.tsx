@@ -62,6 +62,7 @@ function LoginModal({
         id: userInfo.id,
         gameswon: userInfo.gameswon,
         gameslost: userInfo.gameslost,
+        gamesdrawn: userInfo.gamesdrawn,
         currentstreak: userInfo.currentstreak,
         maxstreak: userInfo.maxstreak,
       });
