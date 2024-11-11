@@ -1,10 +1,11 @@
+import { IResponse } from "../interface/responseInterface";
 import { getHeaderInfo, URL_CONST } from "../utils/urlConst";
 
 async function createUser(
   username: string,
   password: string,
   confirmPassword: string
-) {
+): Promise<IResponse> {
   const url = URL_CONST + "register";
   const reqBody = {
     username: username,
@@ -19,19 +20,24 @@ async function createUser(
     });
 
     if (!response.ok) {
-      return console.log(response.status);
+      console.log(response.status);
+      return { error: true, errorMessage: "Register error" };
     }
 
-    const json = response.json();
+    const json: Promise<IResponse> = await response.json();
 
     console.log(json);
     return json;
   } catch (error) {
     console.log(error);
+    return { error: true, errorMessage: "Error connecting to API" };
   }
 }
 
-async function loginUser(username: string, password: string) {
+async function loginUser(
+  username: string,
+  password: string
+): Promise<IResponse> {
   const url = URL_CONST + "login";
   const reqBody = {
     username: username,
@@ -46,16 +52,16 @@ async function loginUser(username: string, password: string) {
 
     if (!response.ok) {
       console.log(response.status);
-      return { error: true };
+      return { error: true, errorMessage: "Error validating user" };
     }
 
-    const json = await response.json();
+    const json: Promise<IResponse> = await response.json();
 
     console.log(json);
     return json;
   } catch (error) {
     console.log(error);
-    return { error: true };
+    return { error: true, errorMessage: "Error connecting to API" };
   }
 }
 
