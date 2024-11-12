@@ -1,4 +1,4 @@
-import { IResponse } from "../interface/responseInterface";
+import { IResponse, IUser } from "../interface/responseInterface";
 import { getHeaderInfo, URL_CONST } from "../utils/urlConst";
 
 async function createUser(
@@ -70,7 +70,7 @@ async function loginUser(
   }
 }
 
-async function tokenSend() {
+async function tokenSend(): Promise<IResponse> {
   const url = URL_CONST + "token";
   try {
     const response = await fetch(url, {
@@ -91,4 +91,31 @@ async function tokenSend() {
   }
 }
 
-export { createUser, loginUser, tokenSend };
+export interface ILeaderboard {
+  users?: IUser[];
+  error?: boolean;
+  errorMessage?: string;
+}
+
+async function getLeaderboards(): Promise<ILeaderboard> {
+  const url = URL_CONST + "leaderboard";
+  try {
+    const response = await fetch(url, {
+      method: "GET",
+      headers: getHeaderInfo(),
+    });
+    if (!response.ok) {
+      console.log(response.status);
+      return { error: true, errorMessage: "Getting response from server" };
+    }
+
+    const json: IUser[] = await response.json();
+
+    console.log(json);
+    return { users: json, error: false };
+  } catch (error) {
+    return { error: true };
+  }
+}
+
+export { createUser, loginUser, tokenSend, getLeaderboards };

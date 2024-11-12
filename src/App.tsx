@@ -49,6 +49,7 @@ function App() {
   const [winStreak, setWinStreak] = useState<number>(0);
   const [loginModal, setLoginModal] = useState<boolean>(false);
   const [user, setUser] = useState<IUser>();
+  const [leaderboards, setLeaderboards] = useState<IUser[]>();
 
   const roomReset = (socket: Socket) => {
     setRoomFull(false);
@@ -169,6 +170,13 @@ function App() {
       socket?.off("handleDisconnectLoss");
     };
   }, [socket]);
+
+  useEffect(() => {
+    const getLeaderboards = async () => {
+      const leaderboards = await getLeaderboards();
+      setLeaderboards(leaderboards);
+    };
+  });
 
   const handleClick = async () => {
     if (!connectState) {
