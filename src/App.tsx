@@ -183,7 +183,7 @@ function App() {
   const handleClick = async () => {
     if (!connectState) {
       setMatchingModal(true);
-      const newSocket = io("http://localhost:3000/");
+      const newSocket = io(import.meta.env.VITE_ENDPOINT_SOCKET);
       setSocket(newSocket);
 
       newSocket.on("connect", () => {
