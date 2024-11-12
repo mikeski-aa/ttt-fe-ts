@@ -1,7 +1,7 @@
 import { Dispatch, SetStateAction, SyntheticEvent, useState } from "react";
 import "../styles/loginmodal.css";
 import { validateInput, validatePwMatch } from "../utils/inputVal";
-import { createUser, loginUser, tokenSend } from "../services/userCalls";
+import { createUser, loginUser } from "../services/userCalls";
 import { IUser } from "../interface/responseInterface";
 
 function LoginModal({

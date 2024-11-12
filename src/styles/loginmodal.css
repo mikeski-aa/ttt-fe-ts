@@ -1,16 +1,49 @@
 .logregform {
   display: flex;
   flex-direction: column;
+  align-items: center;
+  gap: 5px;
 }
 
 .formInput {
   width: fit-content;
+  padding: 6px;
+  font-size: 1rem;
+  border-radius: 5px;
+  border: none;
+  text-align: center;
+}
+
+.formInput:focus {
+  outline: 2px solid #e980fc;
 }
 
 .submitBtn {
   width: fit-content;
+  margin-top: 5px;
+  margin-bottom: 5px;
 }
 
 .hide {
   display: none;
+}
+
+.loginDiv,
+.registerDiv {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.error.show {
+  text-align: center;
+}
+
+.error {
+  outline: 2px solid red;
+  color: red;
+  width: 207px;
+  border-radius: 5px;
+  margin-top: 5px;
+  font-weight: 700;
 }
