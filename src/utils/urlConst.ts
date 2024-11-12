@@ -1,4 +1,4 @@
-const URL_CONST: string = "http://localhost:3000/api/";
+const URL_CONST: string = import.meta.env.VITE_ENDPOINT_API;
 
 const getHeaderInfo = (): HeadersInit => {
   return {
