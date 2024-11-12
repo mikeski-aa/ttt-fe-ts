@@ -14,6 +14,7 @@ import {
   updateLossForDC,
   updateWins,
 } from "./services/gameCalls";
+import Leaderboards from "./components/Leaderboards";
 
 interface IRoom {
   roomId: string;
@@ -304,7 +305,7 @@ function App() {
           </>
         ) : null}
       </GameContext.Provider>
-      {winStreak > -1 ? (
+      {winStreak > -1 && !user ? (
         <div className="streak">Win streak: {winStreak}</div>
       ) : null}
       <button onClick={() => handleClick()}>
@@ -322,9 +323,9 @@ function App() {
           Logout
         </button>
       ) : null}
-      {user ? (
+      {user && !connectState ? (
         <div className="userInfoBar">
-          <div className="userInfo">{user.username}</div>
+          <div className="userInfo name">{user.username}</div>
           <div className="userInfo">Games won: {user.gameswon}</div>
           <div className="userInfo">Games lost: {user.gameslost}</div>
           <div className="userInfo">Games drawn: {user.gamesdrawn}</div>
@@ -332,6 +333,11 @@ function App() {
           <div className="userInfo">Highest streak: {user.maxstreak}</div>
         </div>
       ) : null}
+      {leaderboards ? (
+        <Leaderboards leaderboards={leaderboards} />
+      ) : (
+        <div className="loading">Loading</div>
+      )}
     </div>
   );
 }

@@ -1,0 +1,49 @@
+.headingText {
+  width: 100px;
+  text-align: center;
+}
+
+.headingText.name {
+  overflow-x: hidden;
+}
+
+.headings,
+.oneItem {
+  display: flex;
+}
+
+.mappedValsGoHere {
+  display: flex;
+  flex-direction: column;
+}
+
+.leaderboard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: fixed;
+  bottom: 0;
+  border: 2px solid #e980fc;
+  border-radius: 5px;
+  padding: 6px;
+}
+
+.heading {
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.headings {
+  border-bottom: 2px solid #e980fc;
+}
+
+.mappedValsGoHere {
+  max-height: 100px;
+  overflow-y: scroll;
+}
+
+@media (max-width: 550px) {
+  .headingText {
+    width: 50px;
+  }
+}
