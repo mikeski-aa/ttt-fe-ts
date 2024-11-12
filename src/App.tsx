@@ -173,6 +173,7 @@ function App() {
     };
   }, [socket]);
 
+  // fetch leaderboards on page load
   useEffect(() => {
     const getLeaderboards = async () => {
       const newLeaderboards: ILeaderboard = await getLbs();
@@ -335,7 +336,10 @@ function App() {
         </div>
       ) : null}
       {leaderboards ? (
-        <Leaderboards leaderboards={leaderboards} />
+        <Leaderboards
+          leaderboards={leaderboards}
+          setLeaderboards={setLeaderboards}
+        />
       ) : (
         <div className="lbloadholder">
           {" "}

@@ -47,3 +47,8 @@
     width: 50px;
   }
 }
+
+.leaderboardrefreshbtn {
+  font-size: 0.5rem;
+  padding: 5px;
+}
