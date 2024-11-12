@@ -7,7 +7,7 @@ import ModalTemplate from "./components/ModalTemplate";
 import MatchingModal from "./components/MatchingModal";
 import LoginModal from "./components/LoginModal";
 import { IUser } from "./interface/responseInterface";
-import { tokenSend } from "./services/userCalls";
+import { getLbs, ILeaderboard, tokenSend } from "./services/userCalls";
 import {
   updateDraws,
   updateLoss,
@@ -173,10 +173,14 @@ function App() {
 
   useEffect(() => {
     const getLeaderboards = async () => {
-      const leaderboards = await getLeaderboards();
-      setLeaderboards(leaderboards);
+      const newLeaderboards: ILeaderboard = await getLbs();
+      console.log(newLeaderboards);
+      if (!newLeaderboards.error) {
+        setLeaderboards(newLeaderboards.users);
+      }
     };
-  });
+    getLeaderboards();
+  }, []);
 
   const handleClick = async () => {
     if (!connectState) {

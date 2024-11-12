@@ -97,8 +97,8 @@ export interface ILeaderboard {
   errorMessage?: string;
 }
 
-async function getLeaderboards(): Promise<ILeaderboard> {
-  const url = URL_CONST + "leaderboard";
+async function getLbs(): Promise<ILeaderboard> {
+  const url = URL_CONST + "leaderboards";
   try {
     const response = await fetch(url, {
       method: "GET",
@@ -114,8 +114,8 @@ async function getLeaderboards(): Promise<ILeaderboard> {
     console.log(json);
     return { users: json, error: false };
   } catch (error) {
-    return { error: true };
+    return { error: true, errorMessage: "Getting response from server" };
   }
 }
 
-export { createUser, loginUser, tokenSend, getLeaderboards };
+export { createUser, loginUser, tokenSend, getLbs };
