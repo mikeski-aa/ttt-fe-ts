@@ -47,6 +47,7 @@ function App() {
   const [loginModal, setLoginModal] = useState<boolean>(false);
   const [user, setUser] = useState<IUser>();
   const [leaderboards, setLeaderboards] = useState<IUser[]>();
+  const [loginLoading, setLoginLoading] = useState<boolean>(false);
 
   const roomReset = (socket: Socket) => {
     setRoomFull(false);
@@ -212,6 +213,7 @@ function App() {
 
   const handleLoginClick = async () => {
     if (localStorage.getItem("token")) {
+      setLoginLoading(true);
       // inform user we are fetching their info
       const userInfo = await tokenSend();
 
@@ -225,6 +227,7 @@ function App() {
           currentstreak: userInfo.currentstreak,
           maxstreak: userInfo.maxstreak,
         });
+        setLoginLoading(false);
         return;
       }
     }
@@ -305,21 +308,27 @@ function App() {
       {winStreak > -1 && !user ? (
         <div className="streak">Win streak: {winStreak}</div>
       ) : null}
-      <button onClick={() => handleClick()}>
-        {connectState ? "Quit Match" : "Find opponent"}
-      </button>
 
-      {!user && !connectState ? (
-        <button onClick={() => handleLoginClick()} className="loginButton">
-          Login
-        </button>
-      ) : null}
+      {loginLoading ? (
+        <LoadingBox text="Logging in..." />
+      ) : (
+        <>
+          <button onClick={() => handleClick()}>
+            {connectState ? "Quit Match" : "Find opponent"}
+          </button>
+          {!user && !connectState ? (
+            <button onClick={() => handleLoginClick()} className="loginButton">
+              Login
+            </button>
+          ) : null}
+          {user && !connectState ? (
+            <button onClick={() => handleLogoutClick()} className="loginButton">
+              Logout
+            </button>
+          ) : null}
+        </>
+      )}
 
-      {user && !connectState ? (
-        <button onClick={() => handleLogoutClick()} className="loginButton">
-          Logout
-        </button>
-      ) : null}
       {user && !connectState ? (
         <div className="userInfoBar">
           <div className="userInfo name">{user.username}</div>
