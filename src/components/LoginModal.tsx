@@ -38,7 +38,6 @@ function LoginModal({
   };
 
   const handleLoginClick = async (e: SyntheticEvent) => {
-    console.log("login clicked");
     e.preventDefault();
 
     // make sure input is valid length
@@ -75,7 +74,6 @@ function LoginModal({
   };
 
   const handleRegisterClick = async (e: SyntheticEvent) => {
-    console.log("reg clicked");
     e.preventDefault();
 
     // handle validation of input before submitting
@@ -85,9 +83,6 @@ function LoginModal({
       validateInput(regConfPw, 5, setRegCError) ||
       validatePwMatch(regPw, regConfPw, setMatchErr)
     ) {
-      console.log(validateInput(regUname, 1, setRegUError));
-      console.log(validateInput(regPw, 5, setRegPError));
-      console.log(validateInput(regConfPw, 5, setRegCError));
       return;
     }
 

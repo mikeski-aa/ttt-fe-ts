@@ -142,7 +142,6 @@ function App() {
       socket.on("handleDisconnectLoss", async (item) => {
         if (user) {
           const filtered = item.filter((item: number) => item !== user.id);
-          console.log(filtered[0]);
           await updateLossForDC(filtered[0]);
         } else {
           const filtered = item.filter(
@@ -173,7 +172,7 @@ function App() {
   useEffect(() => {
     const getLeaderboards = async () => {
       const newLeaderboards: ILeaderboard = await getLbs();
-      console.log(newLeaderboards);
+
       if (!newLeaderboards.error) {
         setLeaderboards(newLeaderboards.users);
       }
@@ -188,7 +187,6 @@ function App() {
       setSocket(newSocket);
 
       newSocket.on("connect", () => {
-        console.log("connected to socket");
         setConnectState(true);
         // immediately send user info
         if (user) {

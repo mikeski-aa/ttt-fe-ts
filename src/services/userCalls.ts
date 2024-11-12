@@ -20,16 +20,13 @@ async function createUser(
     });
 
     if (!response.ok) {
-      console.log(response.status);
       return { error: true, errorMessage: "Register error" };
     }
 
     const json: IResponse = await response.json();
 
-    console.log(json);
     return json;
   } catch (error) {
-    console.log(error);
     return { error: true, errorMessage: "Error connecting to API" };
   }
 }
@@ -51,7 +48,6 @@ async function loginUser(
     });
 
     if (!response.ok) {
-      console.log(response.status);
       return { error: true, errorMessage: "Error validating user" };
     }
 
@@ -62,10 +58,8 @@ async function loginUser(
       localStorage.setItem("token", json.token);
     }
 
-    console.log(json);
     return json;
   } catch (error) {
-    console.log(error);
     return { error: true, errorMessage: "Error connecting to API" };
   }
 }
@@ -78,13 +72,11 @@ async function tokenSend(): Promise<IResponse> {
       headers: getHeaderInfo(),
     });
     if (!response.ok) {
-      console.log(response.status);
       return { error: true, errorMessage: "Error validating user" };
     }
 
     const json: IResponse = await response.json();
 
-    console.log(json);
     return json;
   } catch (error) {
     return { error: true };
@@ -105,13 +97,11 @@ async function getLbs(): Promise<ILeaderboard> {
       headers: getHeaderInfo(),
     });
     if (!response.ok) {
-      console.log(response.status);
       return { error: true, errorMessage: "Getting response from server" };
     }
 
     const json: IUser[] = await response.json();
 
-    console.log(json);
     return { users: json, error: false };
   } catch (error) {
     return { error: true, errorMessage: "Getting response from server" };

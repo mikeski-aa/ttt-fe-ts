@@ -10,13 +10,11 @@ async function updateWins() {
       headers: getHeaderInfo(),
     });
     if (!response.ok) {
-      console.log(response.status);
       return { error: true, errorMessage: "Error validating user" };
     }
 
     const json: IResponse = await response.json();
 
-    console.log(json);
     return json;
   } catch (error) {
     return { error: true };
@@ -32,13 +30,11 @@ async function updateLoss() {
       headers: getHeaderInfo(),
     });
     if (!response.ok) {
-      console.log(response.status);
       return { error: true, errorMessage: "Error validating user" };
     }
 
     const json: IResponse = await response.json();
 
-    console.log(json);
     return json;
   } catch (error) {
     return { error: true };
@@ -54,13 +50,11 @@ async function updateDraws() {
       headers: getHeaderInfo(),
     });
     if (!response.ok) {
-      console.log(response.status);
       return { error: true, errorMessage: "Error validating user" };
     }
 
     const json: IResponse = await response.json();
 
-    console.log(json);
     return json;
   } catch (error) {
     return { error: true };
@@ -79,13 +73,11 @@ async function updateLossForDC(id: number) {
       body: JSON.stringify(newBody),
     });
     if (!response.ok) {
-      console.log(response.status);
       return { error: true, errorMessage: "Error validating user" };
     }
 
     const json: IResponse = await response.json();
 
-    console.log(json);
     return json;
   } catch (error) {
     return { error: true };
