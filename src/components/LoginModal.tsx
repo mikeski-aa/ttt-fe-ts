@@ -3,6 +3,7 @@ import "../styles/loginmodal.css";
 import { validateInput, validatePwMatch } from "../utils/inputVal";
 import { createUser, loginUser } from "../services/userCalls";
 import { IUser } from "../interface/responseInterface";
+import LoadingBox from "./LoadingBox";
 
 function LoginModal({
   modalState,
@@ -26,6 +27,7 @@ function LoginModal({
   const [logUError, setLogUError] = useState<boolean>(false);
   const [logPError, setLogPError] = useState<boolean>(false);
   const [logError, setLogError] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const handleModalClose = () => {
     setModalState(!modalState);
@@ -47,16 +49,19 @@ function LoginModal({
       return;
     }
 
+    setLoading(true);
     const userInfo = await loginUser(logUname, logPw);
 
     // if logging in error
     if (userInfo.error) {
+      setLoading(false);
       return setLogError(true);
     }
 
-    setLogError(false);
-    setModalState(!modalState);
     if (userInfo) {
+      setLogError(false);
+      setLoading(false);
+      setModalState(!modalState);
       setUser({
         username: userInfo.username,
         id: userInfo.id,
@@ -87,10 +92,12 @@ function LoginModal({
     }
 
     // handle register
+    setLoading(true);
     const reggedUser = await createUser(regUname, regPw, regConfPw);
 
     if (!reggedUser.error) {
       const userInfo = await loginUser(regUname, regPw);
+      setLoading(false);
       setModalState(!modalState);
       setUser({
         username: userInfo.username,
@@ -101,6 +108,8 @@ function LoginModal({
         currentstreak: userInfo.currentstreak,
         maxstreak: userInfo.maxstreak,
       });
+    } else {
+      setLoading(false);
     }
   };
 
@@ -140,113 +149,120 @@ function LoginModal({
             X
           </button>
         </div>
-
-        {toggleForm ? (
-          <div className={`loginDiv`}>
-            <form className="logregform">
-              <div className="inputholder">
-                <input
-                  type="text"
-                  placeholder="username"
-                  className="formInput"
-                  value={logUname}
-                  min={1}
-                  max={16}
-                  onChange={(e) => handleInput("logU", e)}
-                ></input>
-                <div className={logUError ? "error show" : "error hide"}>
-                  Username too short
-                </div>
-              </div>
-              <div className="inputholder">
-                <input
-                  type="password"
-                  placeholder="password"
-                  className="formInput"
-                  value={logPw}
-                  onChange={(e) => handleInput("logP", e)}
-                ></input>
-                <div className={logPError ? "error show" : "error hide"}>
-                  Password too short
-                </div>
-              </div>
-              <div className={logError ? "error show" : "error hide"}>
-                Username or password is incorrect
-              </div>
-              <button
-                type="submit"
-                className="submitBtn"
-                onClick={(e) => handleLoginClick(e)}
-              >
-                Log in
-              </button>
-            </form>
-            <button className="goRegister" onClick={handleToggleClick}>
-              Don't have an account? Register
-            </button>
-          </div>
+        {loading ? (
+          <LoadingBox text="Submitting information..." />
         ) : (
-          <div className={`registerDiv`}>
-            <form className="logregform">
-              <div className="inputHolder">
-                <input
-                  type="text"
-                  placeholder="username"
-                  className="formInput"
-                  value={regUname}
-                  min={1}
-                  max={16}
-                  onChange={(e) => handleInput("regU", e)}
-                ></input>
-                <div className={regUError ? "error show" : "error hide"}>
-                  Username too short
-                </div>
+          <>
+            {toggleForm ? (
+              <div className={`loginDiv`}>
+                <form className="logregform">
+                  <div className="inputholder">
+                    <input
+                      type="text"
+                      placeholder="username"
+                      className="formInput"
+                      value={logUname}
+                      minLength={1}
+                      maxLength={16}
+                      onChange={(e) => handleInput("logU", e)}
+                    ></input>
+                    <div className={logUError ? "error show" : "error hide"}>
+                      Username too short
+                    </div>
+                  </div>
+                  <div className="inputholder">
+                    <input
+                      type="password"
+                      placeholder="password"
+                      className="formInput"
+                      value={logPw}
+                      minLength={4}
+                      maxLength={16}
+                      onChange={(e) => handleInput("logP", e)}
+                    ></input>
+                    <div className={logPError ? "error show" : "error hide"}>
+                      Password too short
+                    </div>
+                  </div>
+                  <div className={logError ? "error show" : "error hide"}>
+                    Username or password is incorrect
+                  </div>
+                  <button
+                    type="submit"
+                    className="submitBtn"
+                    onClick={(e) => handleLoginClick(e)}
+                  >
+                    Log in
+                  </button>
+                </form>
+                <button className="goRegister" onClick={handleToggleClick}>
+                  Don't have an account? Register
+                </button>
               </div>
+            ) : (
+              <div className={`registerDiv`}>
+                <form className="logregform">
+                  <div className="inputHolder">
+                    <input
+                      type="text"
+                      placeholder="username"
+                      className="formInput"
+                      value={regUname}
+                      minLength={1}
+                      maxLength={16}
+                      onChange={(e) => handleInput("regU", e)}
+                    ></input>
+                    <div className={regUError ? "error show" : "error hide"}>
+                      Username too short
+                    </div>
+                  </div>
 
-              <div className="inputHolder">
-                <input
-                  type="password"
-                  placeholder="password"
-                  className="formInput"
-                  value={regPw}
-                  onChange={(e) => handleInput("regP", e)}
-                  min={4}
-                  max={16}
-                ></input>
-                <div className={regPError ? "error show" : "error hide"}>
-                  Password too short
-                </div>
-              </div>
+                  <div className="inputHolder">
+                    <input
+                      type="password"
+                      placeholder="password"
+                      className="formInput"
+                      value={regPw}
+                      onChange={(e) => handleInput("regP", e)}
+                      minLength={4}
+                      maxLength={16}
+                    ></input>
+                    <div className={regPError ? "error show" : "error hide"}>
+                      Password too short
+                    </div>
+                  </div>
 
-              <div className="inputHolder">
-                <input
-                  type="password"
-                  placeholder="confirm password"
-                  className="formInput"
-                  value={regConfPw}
-                  min={4}
-                  max={16}
-                  onChange={(e) => handleInput("regC", e)}
-                ></input>
-                <div className={regCError ? "error show" : "error hide"}>
-                  Password too short
-                </div>
+                  <div className="inputHolder">
+                    <input
+                      type="password"
+                      placeholder="confirm password"
+                      className="formInput"
+                      value={regConfPw}
+                      minLength={4}
+                      maxLength={16}
+                      onChange={(e) => handleInput("regC", e)}
+                    ></input>
+                    <div className={regCError ? "error show" : "error hide"}>
+                      Password too short
+                    </div>
+                  </div>
+                  <div className={matchErr ? "error show" : "error hide"}>
+                    Passwords need to match!
+                  </div>
+                  <button
+                    type="submit"
+                    className="submitBtn"
+                    onClick={(e) => handleRegisterClick(e)}
+                  >
+                    Register
+                  </button>
+                </form>
+                <button className="goRegister" onClick={handleToggleClick}>
+                  Already have an account? Login
+                </button>
               </div>
-              <div className={matchErr ? "error show" : "error hide"}>
-                Passwords need to match!
-              </div>
-              <button
-                type="submit"
-                className="submitBtn"
-                onClick={(e) => handleRegisterClick(e)}
-              >
-                Register
-              </button>
-            </form>
-            <button className="goRegister" onClick={handleToggleClick}>
-              Already have an account? Login
-            </button>
-          </div>
+            )}
+          </>
         )}
       </div>
     </div>

@@ -15,6 +15,7 @@ import {
   updateWins,
 } from "./services/gameCalls";
 import Leaderboards from "./components/Leaderboards";
+import LoadingBox from "./components/LoadingBox";
 
 interface IRoom {
   roomId: string;
@@ -336,7 +337,10 @@ function App() {
       {leaderboards ? (
         <Leaderboards leaderboards={leaderboards} />
       ) : (
-        <div className="loading">Loading</div>
+        <div className="lbloadholder">
+          {" "}
+          <LoadingBox text={"Loading leaderboards..."} />
+        </div>
       )}
     </div>
   );
