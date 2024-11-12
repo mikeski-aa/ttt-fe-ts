@@ -1,15 +1,10 @@
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import "../styles/gameboard.css";
-import genBoard from "../utils/genBoard";
-import { IBoardItem } from "../interface/boardInterface";
 import BoardButton from "./BoardButton";
 import { GameContext } from "../App";
 
 function GameBoard() {
-  const [board, setBoard] = useState<IBoardItem[]>(genBoard());
   const gameContext = useContext(GameContext);
-
-  console.log(board);
 
   // making sure that playBoard is actually defined by fetching it
   if (gameContext.playBoard) {
@@ -19,12 +14,10 @@ function GameBoard() {
           {gameContext.playBoard.map((item, index) => (
             <BoardButton
               key={index}
-              setBoard={setBoard}
               row={0}
               xcoord={item.x}
               ycoord={item.y}
               marker={item.marker}
-              pmarker={gameContext.playerMarker}
             />
           ))}
         </div>
@@ -32,12 +25,10 @@ function GameBoard() {
           {gameContext.playBoard.map((item, index) => (
             <BoardButton
               key={index}
-              setBoard={setBoard}
               row={1}
               xcoord={item.x}
               ycoord={item.y}
               marker={item.marker}
-              pmarker={gameContext.playerMarker}
             />
           ))}
         </div>
@@ -45,12 +36,10 @@ function GameBoard() {
           {gameContext.playBoard.map((item, index) => (
             <BoardButton
               key={index}
-              setBoard={setBoard}
               row={2}
               xcoord={item.x}
               ycoord={item.y}
               marker={item.marker}
-              pmarker={gameContext.playerMarker}
             />
           ))}
         </div>

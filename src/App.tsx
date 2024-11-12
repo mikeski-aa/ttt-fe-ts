@@ -17,11 +17,6 @@ import {
 import Leaderboards from "./components/Leaderboards";
 import LoadingBox from "./components/LoadingBox";
 
-interface IRoom {
-  roomId: string;
-  users: string[];
-}
-
 interface IGameContext {
   socket: Socket | undefined;
   playerMarker: string;

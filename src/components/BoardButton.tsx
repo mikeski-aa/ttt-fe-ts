@@ -1,23 +1,18 @@
-import { Dispatch, SetStateAction, useContext } from "react";
-import { IBoardItem } from "../interface/boardInterface";
+import { useContext } from "react";
 import { GameContext } from "../App";
 import cross from "../assets/cross-sign-svgrepo-com.svg";
 import circle from "../assets/empty-circle-svgrepo-com.svg";
 
 function BoardButton({
-  setBoard,
   xcoord,
   ycoord,
   marker,
   row,
-  pmarker,
 }: {
-  setBoard: Dispatch<SetStateAction<IBoardItem[]>>;
   xcoord: number;
   ycoord: number;
   row: number;
   marker: string;
-  pmarker: string;
 }) {
   const gameContext = useContext(GameContext);
 
