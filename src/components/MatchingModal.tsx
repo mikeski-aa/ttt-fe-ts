@@ -29,11 +29,11 @@ function MatchingModal({
           </button>
         </div>
         <div className={`modalText`}>Looking for a player...</div>
-        {!leaderboards ? (
+        {leaderboards ? null : (
           <div className="serverMsg">
             Our servers are waking up, this can take some time...
           </div>
-        ) : null}
+        )}
         <img className="loading" src={spinner} />
         <div className="buttonHolder">
           <button className="quitMatchingButton" onClick={handleModalClose}>
