@@ -17,7 +17,7 @@ import {
 import Leaderboards from "./components/Leaderboards";
 import LoadingBox from "./components/LoadingBox";
 
-interface IGameContext {
+export interface IGameContext {
   socket: Socket | undefined;
   playerMarker: string;
   canClick: boolean;

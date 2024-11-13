@@ -1,7 +1,9 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
+import "@testing-library/jest-dom";
 import React from "react";
 import BoardButton from "../src/components/BoardButton";
+import { GameContext, IGameContext } from "../src/App";
 
 describe("Button component rendered correctly", () => {
   it("renders correct button classname", () => {
@@ -23,17 +25,16 @@ describe("Button component rendered correctly", () => {
   it("renders correct button marker", () => {
     render(<BoardButton xcoord={0} ycoord={0} row={0} marker="X" />);
     const img = screen.getByRole("img");
-    const cross = "http://localhost:3000/src/assets/cross-sign-svgrepo-com.svg";
-    expect(img).toHaveProperty("src", cross);
+    const cross = "/src/assets/cross-sign-svgrepo-com.svg";
+    expect(img).toHaveAttribute("src", cross);
   });
 
   // check O is rendered
   it("renders correct button marker", () => {
     render(<BoardButton xcoord={0} ycoord={0} row={0} marker="O" />);
     const img = screen.getByRole("img");
-    const cross =
-      "http://localhost:3000/src/assets/empty-circle-svgrepo-com.svg";
-    expect(img).toHaveProperty("src", cross);
+    const cross = "/src/assets/empty-circle-svgrepo-com.svg";
+    expect(img).toHaveAttribute("src", cross);
   });
 
   // check no img is rendered
