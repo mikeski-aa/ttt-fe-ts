@@ -277,6 +277,7 @@ function App() {
           modal={matchingModal}
           setModal={setMatchingModal}
           socket={socket}
+          leaderboards={leaderboards}
         />
       ) : null}
 
