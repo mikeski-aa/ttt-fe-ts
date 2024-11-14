@@ -30,5 +30,26 @@ describe("Button component rendered correctly", () => {
     // checks that length of buttons matches playboard length
     const button = container.querySelectorAll(".boardItem");
     expect(button.length).toBe(mockGameContext.playBoard.length);
+
+    // checks number of rows
+    const row = container.querySelectorAll(".gameBoard > div");
+    expect(row.length).toBe(3);
+  });
+
+  it("does not render when board undefined", () => {
+    const mockGameContext = {
+      socket: undefined,
+      playerMarker: "X",
+      canClick: true,
+      playBoard: undefined,
+    };
+
+    const { container } = render(
+      <GameContext.Provider value={mockGameContext}>
+        <GameBoard />
+      </GameContext.Provider>
+    );
+
+    expect(container.firstChild).toBeNull();
   });
 });
